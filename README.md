@@ -1,5 +1,3 @@
-# This is a WIP. One final update is on the way, to organize everything and add more comments.
-
 # This is a set of Python scripts that is used to generate the icons for the Hardware One project.
 
 ## Usage Guide:
