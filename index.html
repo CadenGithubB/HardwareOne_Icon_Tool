@@ -671,7 +671,7 @@
             </div>
         </div>
         <div class="dropdown" id="exportDropdown">
-            <button class="btn btn-sm btn-primary" onclick="toggleDropdown('exportDropdown')">Export &#9662;</button>
+            <button class="btn btn-sm" onclick="toggleDropdown('exportDropdown')">Export &#9662;</button>
             <div class="dropdown-menu">
                 <button class="dropdown-item" onclick="exportCurrentIconPng(); closeDropdowns()">Single Icon PNG</button>
                 <div class="dropdown-divider"></div>
@@ -1729,8 +1729,20 @@ document.querySelectorAll('.help-trigger').forEach(trigger => {
   if (!tooltip) return;
   trigger.addEventListener('mouseenter', () => {
     const rect = trigger.getBoundingClientRect();
-    tooltip.style.top = (rect.bottom + 6) + 'px';
-    tooltip.style.right = (window.innerWidth - rect.right) + 'px';
+    const margin = 8;
+    const tooltipWidth = 240;
+    const tooltipHeight = tooltip.offsetHeight || 140;
+    const left = Math.min(
+      Math.max(margin, rect.right - tooltipWidth),
+      window.innerWidth - tooltipWidth - margin
+    );
+    const top = Math.min(
+      Math.max(margin, rect.bottom + 6),
+      window.innerHeight - tooltipHeight - margin
+    );
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
+    tooltip.style.right = 'auto';
     trigger.classList.add('active');
   });
   trigger.addEventListener('mouseleave', () => {
