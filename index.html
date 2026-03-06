@@ -108,6 +108,15 @@
         right: 16px;
     }
 
+    .header-left-btns {
+        position: absolute;
+        top: 10px;
+        left: 16px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
     .header-copy { text-align: center; }
 
     header h1 {
@@ -125,8 +134,26 @@
         display: flex;
         gap: 6px;
         align-items: center;
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--border);
+        padding: 8px 10px;
+    }
+
+    /* Left column — bare flex column like right side */
+    .panel-left {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        overflow: hidden;
+    }
+
+    .panel-left .icon-list-card {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        overflow: hidden;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
     }
 
     .header-actions {
@@ -399,8 +426,15 @@
 
     /* Right panel (tools) */
     .panel-tools {
-        padding: 14px;
-        gap: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0;
+        overflow-y: auto;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
     }
 
     .section-title {
@@ -420,7 +454,7 @@
         border: 1px solid var(--border);
         border-radius: 6px;
         margin-bottom: 14px;
-        overflow: hidden;
+        overflow: visible;
     }
 
     .section-card .section-title {
@@ -445,9 +479,7 @@
 
     .help-tooltip {
         display: none;
-        position: absolute;
-        right: 0;
-        top: calc(100% + 6px);
+        position: fixed;
         background: var(--panel-elevated);
         border: 1px solid var(--border);
         border-radius: 8px;
@@ -455,16 +487,16 @@
         font-size: 0.8em;
         line-height: 1.6;
         color: var(--fg);
-        width: 220px;
-        box-shadow: 0 8px 24px rgba(0,0,0,.2);
-        z-index: 200;
+        width: 240px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.3);
+        z-index: 1000;
         text-transform: none;
         letter-spacing: 0;
         font-weight: normal;
         backdrop-filter: blur(12px);
     }
 
-    .help-trigger:hover .help-tooltip { display: block; }
+    .help-trigger.active .help-tooltip { display: block; }
 
     .section-card .info-box {
         border: none;
@@ -618,41 +650,43 @@
             <p>Create 32&times;32 monochrome icons for your ESP32 device</p>
         </div>
     </div>
+    <div class="header-left-btns">
+        <input type="file" id="importSinglePngInput" accept=".png" style="display:none" onchange="importSingleIconPng(this)">
+        <div class="dropdown" id="importDropdown">
+            <button class="btn btn-sm" onclick="toggleDropdown('importDropdown')">Import &#9662;</button>
+            <div class="dropdown-menu">
+                <button class="dropdown-item" onclick="importIconsheet(); closeDropdowns()">Iconsheet (PNG + JSON)</button>
+                <button class="dropdown-item" onclick="document.getElementById('importSinglePngInput').click(); closeDropdowns()">Single Icon PNG</button>
+            </div>
+        </div>
+        <div class="dropdown" id="exportDropdown">
+            <button class="btn btn-sm btn-primary" onclick="toggleDropdown('exportDropdown')">Export &#9662;</button>
+            <div class="dropdown-menu">
+                <button class="dropdown-item" onclick="exportCurrentIconPng(); closeDropdowns()">Single Icon PNG</button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item" onclick="exportIconsheetPng(); closeDropdowns()">Iconsheet PNG</button>
+                <button class="dropdown-item" onclick="exportJson(); closeDropdowns()">Iconsheet JSON</button>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-item primary" onclick="exportCpp(); closeDropdowns()">icons_embedded.cpp</button>
+            </div>
+        </div>
+    </div>
     <button class="theme-toggle header-theme-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">&#9728;&#65039;</button>
 </header>
 
 <div class="main">
     <!-- Left: Icon List -->
-    <div class="panel">
-        <div class="panel-toolbar">
-            <input type="file" id="importSinglePngInput" accept=".png" style="display:none" onchange="importSingleIconPng(this)">
-            <div class="dropdown" id="importDropdown">
-                <button class="btn btn-sm" onclick="toggleDropdown('importDropdown')">Import &#9662;</button>
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" onclick="importIconsheet(); closeDropdowns()">Iconsheet (PNG + JSON)</button>
-                    <button class="dropdown-item" onclick="document.getElementById('importSinglePngInput').click(); closeDropdowns()">Single Icon PNG</button>
+    <div class="panel-left">
+        <div class="icon-list-card">
+            <div class="section-title" style="justify-content:space-between;">
+                <div style="display:flex;align-items:center;gap:8px;white-space:nowrap;">
+                    <span style="white-space:nowrap;">Icons (<span id="iconCount">0</span>)</span>
+                    <button class="btn btn-sm" onclick="loadStandardIcons()">&#9733; Defaults</button>
+                    <button class="btn btn-sm" onclick="showAddIconModal()">+ Add</button>
                 </div>
             </div>
-            <div class="dropdown" id="exportDropdown">
-                <button class="btn btn-sm btn-primary" onclick="toggleDropdown('exportDropdown')">Export &#9662;</button>
-                <div class="dropdown-menu">
-                    <button class="dropdown-item" onclick="exportCurrentIconPng(); closeDropdowns()">Single Icon PNG</button>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" onclick="exportIconsheetPng(); closeDropdowns()">Iconsheet PNG</button>
-                    <button class="dropdown-item" onclick="exportJson(); closeDropdowns()">Iconsheet JSON</button>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item primary" onclick="exportCpp(); closeDropdowns()">icons_embedded.cpp</button>
-                </div>
-            </div>
+            <div class="icon-list" id="iconList"></div>
         </div>
-        <div class="panel-header">
-            <span>Icons (<span id="iconCount">0</span>)</span>
-            <div style="display:flex;gap:4px;">
-                <button class="btn btn-sm" onclick="loadStandardIcons()">&#9733; Defaults</button>
-                <button class="btn btn-sm" onclick="showAddIconModal()">+ Add</button>
-            </div>
-        </div>
-        <div class="icon-list" id="iconList"></div>
     </div>
 
     <!-- Center: Drawing Canvas -->
@@ -674,7 +708,7 @@
     </div>
 
     <!-- Right: Tools -->
-    <div class="panel panel-tools">
+    <div class="panel-tools">
         <div class="section-card">
             <div class="section-title">Tools</div>
             <div class="tool-grid">
@@ -1668,6 +1702,23 @@ function closeDropdowns() {
 
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.dropdown')) closeDropdowns();
+});
+
+// ============================================================
+// Help tooltip positioning
+// ============================================================
+document.querySelectorAll('.help-trigger').forEach(trigger => {
+  const tooltip = trigger.querySelector('.help-tooltip');
+  if (!tooltip) return;
+  trigger.addEventListener('mouseenter', () => {
+    const rect = trigger.getBoundingClientRect();
+    tooltip.style.top = (rect.bottom + 6) + 'px';
+    tooltip.style.right = (window.innerWidth - rect.right) + 'px';
+    trigger.classList.add('active');
+  });
+  trigger.addEventListener('mouseleave', () => {
+    trigger.classList.remove('active');
+  });
 });
 
 // ============================================================
