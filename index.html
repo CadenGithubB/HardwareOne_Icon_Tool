@@ -353,18 +353,24 @@
         color: var(--fg);
     }
 
-    .icon-list-item .icon-delete {
+    .icon-list-item .icon-delete,
+    .icon-list-item .icon-rename {
         opacity: 0;
         transition: opacity 0.15s;
-        color: var(--danger);
         cursor: pointer;
-        font-size: 14px;
-        padding: 2px 4px;
+        font-size: 11px;
+        padding: 2px 5px;
         flex-shrink: 0;
+        border-radius: 4px;
     }
 
-    .icon-list-item:hover .icon-delete { opacity: 0.7; }
-    .icon-list-item .icon-delete:hover { opacity: 1; }
+    .icon-list-item .icon-delete { color: var(--danger); }
+    .icon-list-item .icon-rename { color: var(--muted); }
+
+    .icon-list-item:hover .icon-delete,
+    .icon-list-item:hover .icon-rename { opacity: 0.7; }
+    .icon-list-item .icon-delete:hover { opacity: 1; color: var(--danger); }
+    .icon-list-item .icon-rename:hover { opacity: 1; color: var(--fg); }
 
     /* Center panel */
     .panel-center {
@@ -672,7 +678,7 @@
                 <button class="dropdown-item" onclick="exportIconsheetPng(); closeDropdowns()">Iconsheet PNG</button>
                 <button class="dropdown-item" onclick="exportJson(); closeDropdowns()">Iconsheet JSON</button>
                 <div class="dropdown-divider"></div>
-                <button class="dropdown-item primary" onclick="exportCpp(); closeDropdowns()">icons_embedded.cpp</button>
+                <button class="dropdown-item" onclick="exportCpp(); closeDropdowns()">icons_embedded.cpp</button>
             </div>
         </div>
     </div>
@@ -967,6 +973,11 @@ function renderIconList() {
     name.className = 'icon-name';
     name.textContent = icon.name;
 
+    const ren = document.createElement('span');
+    ren.className = 'icon-rename';
+    ren.textContent = 'rename';
+    ren.onclick = (e) => { e.stopPropagation(); showRenameModal(i); };
+
     const del = document.createElement('span');
     del.className = 'icon-delete';
     del.textContent = '\u2715';
@@ -974,6 +985,7 @@ function renderIconList() {
 
     item.appendChild(thumb);
     item.appendChild(name);
+    item.appendChild(ren);
     item.appendChild(del);
     list.appendChild(item);
   });
