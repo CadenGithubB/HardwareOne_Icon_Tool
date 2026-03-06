@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw
 TILE_SIZE = 32
 SPACING = 1
 GRID = 15
-CANVAS_SIZE = 512
+CANVAS_SIZE = 496  # 15 cols × (32 + 1) + 1 = 496px
 STEP = TILE_SIZE + SPACING
 INK = (255, 255, 255, 255)
 

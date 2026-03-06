@@ -88,37 +88,102 @@
     /* Header */
     header {
         text-align: center;
-        padding: 14px 20px;
+        padding: 10px 20px 12px;
         border-bottom: 1px solid var(--border);
         flex-shrink: 0;
+        position: relative;
     }
 
     .header-top {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        max-width: 95%;
+        max-width: 1400px;
         margin: 0 auto;
     }
 
-    .header-copy { flex: 1; text-align: center; }
+    .header-theme-btn {
+        position: absolute;
+        top: 10px;
+        right: 16px;
+    }
+
+    .header-copy { text-align: center; }
 
     header h1 {
-        font-size: 1.5em;
+        font-size: 1.4em;
         color: var(--accent-strong);
-        margin-bottom: 2px;
+        margin-bottom: 1px;
     }
 
     header p {
         color: var(--muted);
-        font-size: 0.85em;
+        font-size: 0.82em;
+    }
+
+    .panel-toolbar {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
     }
 
     .header-actions {
         display: flex;
         gap: 8px;
         align-items: center;
+    }
+
+    /* Dropdown menus */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        background: var(--secondary-bg);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        min-width: 180px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.18);
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .dropdown-menu.align-right {
+        left: auto;
+        right: 0;
+    }
+
+    .dropdown.open .dropdown-menu { display: block; }
+
+    .dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 9px 14px;
+        text-align: left;
+        background: none;
+        border: none;
+        color: var(--secondary-fg);
+        font-size: 0.85em;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.15s;
+    }
+
+    .dropdown-item:hover { background: var(--surface-strong); }
+
+    .dropdown-item.primary { color: var(--accent); font-weight: bold; }
+
+    .dropdown-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 3px 0;
     }
 
     .theme-toggle {
@@ -350,6 +415,69 @@
         border: 1px solid var(--border);
     }
 
+    .section-card {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        margin-bottom: 14px;
+        overflow: hidden;
+    }
+
+    .section-card .section-title {
+        margin-bottom: 0;
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .help-trigger {
+        font-size: 0.78em;
+        color: var(--accent);
+        cursor: default;
+        opacity: 0.8;
+        position: relative;
+    }
+
+    .help-trigger:hover { opacity: 1; }
+
+    .help-tooltip {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 6px);
+        background: var(--panel-elevated);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.8em;
+        line-height: 1.6;
+        color: var(--fg);
+        width: 220px;
+        box-shadow: 0 8px 24px rgba(0,0,0,.2);
+        z-index: 200;
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: normal;
+        backdrop-filter: blur(12px);
+    }
+
+    .help-trigger:hover .help-tooltip { display: block; }
+
+    .section-card .info-box {
+        border: none;
+        border-radius: 0;
+        background: none;
+        margin-bottom: 0;
+    }
+
+    .section-card .tool-grid {
+        margin-bottom: 0;
+        padding: 10px;
+    }
+
     .tool-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -485,25 +613,38 @@
 
 <header>
     <div class="header-top">
-        <div class="header-actions">
-            <button class="btn" onclick="importIconsheet()">Import</button>
-        </div>
         <div class="header-copy">
             <h1>HardwareOne Icon Generator</h1>
             <p>Create 32&times;32 monochrome icons for your ESP32 device</p>
         </div>
-        <div class="header-actions">
-            <button class="btn" onclick="exportJson()">Export JSON</button>
-            <button class="btn" onclick="exportIconsheetPng()">Export PNG</button>
-            <button class="btn btn-primary" onclick="exportCpp()">Export C++</button>
-            <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">&#9728;&#65039;</button>
-        </div>
     </div>
+    <button class="theme-toggle header-theme-btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">&#9728;&#65039;</button>
 </header>
 
 <div class="main">
     <!-- Left: Icon List -->
     <div class="panel">
+        <div class="panel-toolbar">
+            <input type="file" id="importSinglePngInput" accept=".png" style="display:none" onchange="importSingleIconPng(this)">
+            <div class="dropdown" id="importDropdown">
+                <button class="btn btn-sm" onclick="toggleDropdown('importDropdown')">Import &#9662;</button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="importIconsheet(); closeDropdowns()">Iconsheet (PNG + JSON)</button>
+                    <button class="dropdown-item" onclick="document.getElementById('importSinglePngInput').click(); closeDropdowns()">Single Icon PNG</button>
+                </div>
+            </div>
+            <div class="dropdown" id="exportDropdown">
+                <button class="btn btn-sm btn-primary" onclick="toggleDropdown('exportDropdown')">Export &#9662;</button>
+                <div class="dropdown-menu">
+                    <button class="dropdown-item" onclick="exportCurrentIconPng(); closeDropdowns()">Single Icon PNG</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="exportIconsheetPng(); closeDropdowns()">Iconsheet PNG</button>
+                    <button class="dropdown-item" onclick="exportJson(); closeDropdowns()">Iconsheet JSON</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item primary" onclick="exportCpp(); closeDropdowns()">icons_embedded.cpp</button>
+                </div>
+            </div>
+        </div>
         <div class="panel-header">
             <span>Icons (<span id="iconCount">0</span>)</span>
             <div style="display:flex;gap:4px;">
@@ -534,47 +675,68 @@
 
     <!-- Right: Tools -->
     <div class="panel panel-tools">
-        <div class="section-title">Tools</div>
-        <div class="tool-grid">
-            <button class="btn active" id="tool-pen" onclick="setTool('pen')">&#9998; Pen</button>
-            <button class="btn" id="tool-eraser" onclick="setTool('eraser')">&#9634; Eraser</button>
-            <button class="btn" id="tool-fill" onclick="setTool('fill')">&#9638; Fill</button>
-            <button class="btn" id="tool-line" onclick="setTool('line')">&#9585; Line</button>
+        <div class="section-card">
+            <div class="section-title">Tools</div>
+            <div class="tool-grid">
+                <button class="btn active" id="tool-pen" onclick="setTool('pen')">&#9998; Pen</button>
+                <button class="btn" id="tool-eraser" onclick="setTool('eraser')">&#9634; Eraser</button>
+                <button class="btn" id="tool-fill" onclick="setTool('fill')">&#9638; Fill</button>
+                <button class="btn" id="tool-line" onclick="setTool('line')">&#9585; Line</button>
+            </div>
         </div>
 
-        <div class="section-title">Actions</div>
-        <div class="tool-grid">
-            <button class="btn" onclick="clearCanvas()">Clear</button>
-            <button class="btn" onclick="invertCanvas()">Invert</button>
-            <button class="btn" onclick="mirrorH()">&#8596; Mirror</button>
-            <button class="btn" onclick="mirrorV()">&#8597; Mirror</button>
-            <button class="btn" onclick="shiftIcon('left')">&#8592; Shift</button>
-            <button class="btn" onclick="shiftIcon('right')">&#8594; Shift</button>
-            <button class="btn" onclick="shiftIcon('up')">&#8593; Shift</button>
-            <button class="btn" onclick="shiftIcon('down')">&#8595; Shift</button>
+        <div class="section-card">
+            <div class="section-title">Actions</div>
+            <div class="tool-grid">
+                <button class="btn" onclick="clearCanvas()">Clear</button>
+                <button class="btn" onclick="invertCanvas()">Invert</button>
+                <button class="btn" onclick="mirrorH()">&#8596; Mirror</button>
+                <button class="btn" onclick="mirrorV()">&#8597; Mirror</button>
+                <button class="btn" onclick="shiftIcon('left')">&#8592; Shift</button>
+                <button class="btn" onclick="shiftIcon('right')">&#8594; Shift</button>
+                <button class="btn" onclick="shiftIcon('up')">&#8593; Shift</button>
+                <button class="btn" onclick="shiftIcon('down')">&#8595; Shift</button>
+            </div>
         </div>
 
-        <div class="section-title">History</div>
-        <div class="tool-grid">
-            <button class="btn" onclick="undo()">&#8617; Undo</button>
-            <button class="btn" onclick="redo()">&#8618; Redo</button>
+        <div class="section-card">
+            <div class="section-title">History</div>
+            <div class="tool-grid">
+                <button class="btn" onclick="undo()">&#8617; Undo</button>
+                <button class="btn" onclick="redo()">&#8618; Redo</button>
+            </div>
         </div>
 
-        <div class="section-title">Shortcuts</div>
-        <div class="info-box">
-            <strong>P</strong> Pen &nbsp; <strong>E</strong> Eraser<br>
-            <strong>F</strong> Fill &nbsp; <strong>L</strong> Line<br>
-            <strong>Ctrl+Z</strong> Undo<br>
-            <strong>Ctrl+Shift+Z</strong> Redo<br>
-            <strong>Right-click</strong> Erase pixel
+        <div class="section-card">
+            <div class="section-title">Shortcuts</div>
+            <div class="info-box">
+                <strong>P</strong> Pen &nbsp; <strong>E</strong> Eraser<br>
+                <strong>F</strong> Fill &nbsp; <strong>L</strong> Line<br>
+                <strong>Ctrl+Z</strong> Undo<br>
+                <strong>Ctrl+Shift+Z</strong> Redo<br>
+                <strong>Right-click</strong> Erase pixel
+            </div>
         </div>
 
-        <div class="section-title" style="margin-top:4px;">Info</div>
-        <div class="info-box" id="infoBox">
-            <strong>Grid:</strong> 32 &times; 32 px<br>
-            <strong>Format:</strong> 1-bit monochrome<br>
-            <strong>Bitmap:</strong> 128 bytes/icon<br>
-            <strong>Output:</strong> PROGMEM arrays
+        <div class="section-card">
+            <div class="section-title">Info
+                <span class="help-trigger">Instructions ?
+                    <div class="help-tooltip">
+                        <strong>Draw</strong> pixels on the canvas with Pen or Fill.<br>
+                        <strong>Right-click</strong> to erase a pixel.<br>
+                        <strong>+ Add</strong> creates a new blank icon.<br>
+                        <strong>★ Defaults</strong> loads all 87 standard icons.<br>
+                        <strong>Double-click</strong> an icon in the list to rename it.<br>
+                        <strong>Export C++</strong> generates <em>icons_embedded.cpp</em> ready for firmware.
+                    </div>
+                </span>
+            </div>
+            <div class="info-box" id="infoBox">
+                <strong>Grid:</strong> 32 &times; 32 px<br>
+                <strong>Format:</strong> 1-bit monochrome<br>
+                <strong>Bitmap:</strong> 128 bytes/icon<br>
+                <strong>Output:</strong> PROGMEM arrays
+            </div>
         </div>
     </div>
 </div>
@@ -609,13 +771,14 @@
 <div class="modal-overlay" id="importModal">
     <div class="modal">
         <h2>Import Iconsheet</h2>
-        <p>Select your <strong>iconsheet.json</strong> and <strong>iconsheet.png</strong> files to import existing icons.</p>
-        <label><span>JSON file:</span></label>
-        <input type="file" id="importJsonFile" accept=".json">
-        <label><span>PNG file:</span></label>
+        <p><strong>PNG + JSON:</strong> Import with names preserved.<br>
+        <strong>PNG only:</strong> Scans all non-empty tiles, names as icon_001, icon_002…</p>
+        <label><span>Iconsheet PNG: <em style="opacity:0.6">(required)</em></span></label>
         <input type="file" id="importPngFile" accept=".png">
+        <label><span>Manifest JSON: <em style="opacity:0.6">(optional)</em></span></label>
+        <input type="file" id="importJsonFile" accept=".json">
         <label>
-            <input type="checkbox" id="importInvert"> Invert colors (use if icons are dark shapes on white background)
+            <input type="checkbox" id="importInvert"> Invert colors (dark-on-white source)
         </label>
         <div class="modal-actions">
             <button class="btn" onclick="hideImportModal()">Cancel</button>
@@ -1103,7 +1266,7 @@ document.addEventListener('keydown', (e) => {
 function importIconsheet() {
   document.getElementById('importJsonFile').value = '';
   document.getElementById('importPngFile').value = '';
-  document.getElementById('importInvert').checked = true;
+  document.getElementById('importInvert').checked = false;
   document.getElementById('importModal').classList.add('show');
 }
 
@@ -1116,72 +1279,160 @@ function doImport() {
   const pngFile = document.getElementById('importPngFile').files[0];
   const invertColors = document.getElementById('importInvert').checked;
 
-  if (!jsonFile || !pngFile) {
-    alert('Please select both a JSON and PNG file.');
+  if (!pngFile) {
+    alert('Please select an iconsheet PNG file.');
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try {
-      const manifest = JSON.parse(e.target.result);
-      const tileSize = manifest.tileSize || 32;
-      const spacing = manifest.spacing || 1;
-      const threshold = manifest.threshold || 128;
-      const iconDefs = manifest.icons || [];
+  const loadPng = (manifest) => {
+    const tileSize = manifest ? (manifest.tileSize || 32) : 32;
+    const spacing = manifest ? (manifest.spacing || 1) : 1;
+    const threshold = manifest ? (manifest.threshold || 128) : 128;
+    const iconDefs = manifest ? (manifest.icons || []) : null;
+    const step = tileSize + spacing;
 
-      const img = new Image();
-      const url = URL.createObjectURL(pngFile);
-      img.onload = () => {
-        const tmpCanvas = document.createElement('canvas');
-        tmpCanvas.width = img.width;
-        tmpCanvas.height = img.height;
-        const tmpCtx = tmpCanvas.getContext('2d');
-        tmpCtx.drawImage(img, 0, 0);
-        URL.revokeObjectURL(url);
+    const img = new Image();
+    const url = URL.createObjectURL(pngFile);
+    img.onload = () => {
+      const tmpCanvas = document.createElement('canvas');
+      tmpCanvas.width = img.width;
+      tmpCanvas.height = img.height;
+      const tmpCtx = tmpCanvas.getContext('2d');
+      tmpCtx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
 
-        icons = [];
-        for (const def of iconDefs) {
-          const step = tileSize + spacing;
-          const sx = (def.col || 0) * step;
-          const sy = (def.row || 0) * step;
-          const imgData = tmpCtx.getImageData(sx, sy, tileSize, tileSize);
-          const pixels = new Uint8Array(TILE * TILE);
-
-          for (let y = 0; y < TILE; y++) {
-            for (let x = 0; x < TILE; x++) {
-              const srcX = Math.floor(x * tileSize / TILE);
-              const srcY = Math.floor(y * tileSize / TILE);
-              const idx = (srcY * tileSize + srcX) * 4;
-              const r = imgData.data[idx];
-              const g = imgData.data[idx + 1];
-              const b = imgData.data[idx + 2];
-              const gray = 0.299 * r + 0.587 * g + 0.114 * b;
-              let on = gray > threshold ? 1 : 0;
-              if (invertColors) on = on ? 0 : 1;
-              pixels[y * TILE + x] = on;
-            }
+      const extractPixels = (col, row) => {
+        const sx = col * step + 1;
+        const sy = row * step + 1;
+        const imgData = tmpCtx.getImageData(sx, sy, tileSize, tileSize);
+        const pixels = new Uint8Array(TILE * TILE);
+        for (let y = 0; y < TILE; y++) {
+          for (let x = 0; x < TILE; x++) {
+            const srcX = Math.floor(x * tileSize / TILE);
+            const srcY = Math.floor(y * tileSize / TILE);
+            const idx = (srcY * tileSize + srcX) * 4;
+            const gray = 0.299 * imgData.data[idx] + 0.587 * imgData.data[idx+1] + 0.114 * imgData.data[idx+2];
+            let on = gray > threshold ? 1 : 0;
+            if (invertColors) on = on ? 0 : 1;
+            pixels[y * TILE + x] = on;
           }
+        }
+        return pixels;
+      };
+
+      icons = [];
+
+      if (iconDefs) {
+        // JSON provided — use named icon definitions
+        for (const def of iconDefs) {
+          const pixels = extractPixels(def.col || 0, def.row || 0);
           icons.push({ name: def.name, pixels });
         }
+      } else {
+        // PNG only — scan all tiles, import non-empty ones
+        const cols = Math.floor((img.width - 1) / step);
+        const rows = Math.floor((img.height - 1) / step);
+        let count = 0;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const pixels = extractPixels(c, r);
+            const hasContent = pixels.some(p => p === 1);
+            if (hasContent) {
+              count++;
+              icons.push({ name: 'icon_' + String(count).padStart(3, '0'), pixels });
+            }
+          }
+        }
+      }
 
-        currentIdx = icons.length > 0 ? 0 : -1;
-        history = []; redoStack = [];
-        hideImportModal();
-        renderCanvas();
-        renderIconList();
-        showToast('Imported ' + icons.length + ' icons');
-      };
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        alert('Failed to load PNG file.');
-      };
-      img.src = url;
-    } catch (err) {
-      alert('Failed to parse JSON: ' + err.message);
-    }
+      currentIdx = icons.length > 0 ? 0 : -1;
+      historyStacks = icons.map(() => []);
+      redoStacks = icons.map(() => []);
+      hideImportModal();
+      renderCanvas();
+      renderIconList();
+      showToast('Imported ' + icons.length + ' icons');
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      alert('Failed to load PNG file.');
+    };
+    img.src = url;
   };
-  reader.readAsText(jsonFile);
+
+  if (jsonFile) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        loadPng(JSON.parse(e.target.result));
+      } catch (err) {
+        alert('Failed to parse JSON: ' + err.message);
+      }
+    };
+    reader.readAsText(jsonFile);
+  } else {
+    loadPng(null);
+  }
+}
+
+// ============================================================
+// Import: single icon PNG
+// ============================================================
+function importSingleIconPng(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+
+  const img = new Image();
+  const url = URL.createObjectURL(file);
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(img, 0, 0, 32, 32);
+    URL.revokeObjectURL(url);
+
+    const imgData = ctx.getImageData(0, 0, 32, 32);
+    const pixels = new Uint8Array(TILE * TILE);
+    for (let y = 0; y < TILE; y++) {
+      for (let x = 0; x < TILE; x++) {
+        const idx = (y * 32 + x) * 4;
+        const gray = 0.299 * imgData.data[idx] + 0.587 * imgData.data[idx+1] + 0.114 * imgData.data[idx+2];
+        pixels[y * TILE + x] = gray > 128 ? 1 : 0;
+      }
+    }
+
+    const name = file.name.replace(/\.png$/i, '').replace(/[^a-zA-Z0-9_]/g, '_') || 'imported';
+    pushHistory();
+    icons.push({ name, pixels });
+    historyStacks.push([]);
+    redoStacks.push([]);
+    currentIdx = icons.length - 1;
+    renderCanvas();
+    renderIconList();
+    showToast('Imported: ' + name);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); alert('Failed to load PNG.'); };
+  img.src = url;
+}
+
+// ============================================================
+// Export: current icon as PNG
+// ============================================================
+function exportCurrentIconPng() {
+  if (currentIdx < 0) { alert('No icon selected.'); return; }
+  const icon = icons[currentIdx];
+  getIconPngBytes(icon).then(bytes => {
+    const blob = new Blob([bytes], { type: 'image/png' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = icon.name + '.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Downloaded: ' + icon.name + '.png');
+  });
 }
 
 // ============================================================
@@ -1214,18 +1465,24 @@ function exportJson() {
 function exportIconsheetPng() {
   if (icons.length === 0) { alert('No icons to export.'); return; }
 
-  const rows = Math.ceil(icons.length / ICONS_PER_ROW);
   const step = TILE + 1;
-  const w = ICONS_PER_ROW * step + 1;
-  const h = rows * step + 1;
 
   const canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
+  canvas.width = 496; canvas.height = 496;
   const ctx = canvas.getContext('2d');
 
-  // Gray grid background
-  ctx.fillStyle = '#c8c8c8';
-  ctx.fillRect(0, 0, w, h);
+  // Black background
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, 496, 496);
+
+  // Draw 1px grid lines at tile boundaries (spacing=1, matches iconsheet.json)
+  // 15 cols/rows × 33px = 495px of icon data; grid lines at every step boundary
+  ctx.fillStyle = '#333333';
+  for (let i = 0; i <= 15; i++) {
+    const pos = i * step;
+    ctx.fillRect(pos, 0, 1, 496); // vertical
+    ctx.fillRect(0, pos, 496, 1); // horizontal
+  }
 
   // Draw each icon tile
   icons.forEach((icon, i) => {
@@ -1234,35 +1491,15 @@ function exportIconsheetPng() {
     const ox = col * step + 1;
     const oy = row * step + 1;
 
-    // White background for tile
     ctx.fillStyle = '#ffffff';
-    ctx.fillRect(ox, oy, TILE, TILE);
-
-    // Draw icon pixels as black shapes on white background
-    // This matches the original iconsheet.png convention used by create_icons.py
-    // generate_icons.py: pixel > 128 -> bit ON -> lit on OLED
-    // So: white (255) in PNG -> bit ON, black (0) in PNG -> bit OFF
-    // Our "drawn" pixels represent what should be ON on OLED
-    // So drawn pixels should be WHITE in the PNG (value 255 > 128 -> bit ON)
     for (let y = 0; y < TILE; y++) {
       for (let x = 0; x < TILE; x++) {
-        if (!icon.pixels[y * TILE + x]) {
-          // Undrawn pixel -> black in PNG -> value 0 -> bit OFF on OLED
-          ctx.fillStyle = '#000000';
+        if (icon.pixels[y * TILE + x]) {
           ctx.fillRect(ox + x, oy + y, 1, 1);
         }
-        // Drawn pixel -> stays white from fillRect above -> value 255 -> bit ON
       }
     }
   });
-
-  // Fill remaining empty tiles with black
-  for (let i = icons.length; i < rows * ICONS_PER_ROW; i++) {
-    const col = i % ICONS_PER_ROW;
-    const row = Math.floor(i / ICONS_PER_ROW);
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(col * step + 1, row * step + 1, TILE, TILE);
-  }
 
   canvas.toBlob(blob => {
     const url = URL.createObjectURL(blob);
@@ -1416,6 +1653,24 @@ function showToast(msg) {
 }
 
 // ============================================================
+// Dropdowns
+// ============================================================
+function toggleDropdown(id) {
+  const el = document.getElementById(id);
+  const isOpen = el.classList.contains('open');
+  closeDropdowns();
+  if (!isOpen) el.classList.add('open');
+}
+
+function closeDropdowns() {
+  document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dropdown')) closeDropdowns();
+});
+
+// ============================================================
 // Theme
 // ============================================================
 function toggleTheme() {
@@ -1443,7 +1698,7 @@ function decodeBitmapHex(hexStr) {
   for (let i = 0; i < 128; i++) {
     const byte = parseInt(hexStr.substr(i * 2, 2), 16);
     for (let bit = 0; bit < 8; bit++) {
-      pixels[i * 8 + bit] = ((byte >> bit) & 1) ? 0 : 1;
+      pixels[i * 8 + bit] = ((byte >> bit) & 1) ? 1 : 0;
     }
   }
   return pixels;
