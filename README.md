@@ -4,7 +4,7 @@ Create and manage 32x32 monochrome icons for ESP32 HardwareOne devices.
 
 ## Web Tool (Recommended)
 
-**[Open Icon Generator](https://cadengithubb.github.io/HardwareOne_Icon_Generator/)**
+**[Github Pages: Icon Generator](https://cadengithubb.github.io/HardwareOne_Icon_Generator/)**
 
 Draw, edit, and export icons entirely in your browser — no dependencies required.
 
