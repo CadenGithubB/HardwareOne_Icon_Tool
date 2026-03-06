@@ -12,7 +12,7 @@ Draw, edit, and export icons entirely in your browser — no dependencies requir
 - **Pixel Drawing** — 32x32 grid canvas with pen, eraser, fill, and line tools
 - **Icon Management** — Add, rename, delete, and browse icons in a visual list
 - **Import** — Load an existing `iconsheet.png` + `iconsheet.json` to continue editing
-- **Export C++** — Download `icons_embedded.cpp` with PROGMEM arrays ready for firmware
+- **Export C++** — Download `icons_embedded.cpp` with PROGMEM arrays ready for use in a HardwareOne system
 - **Export PNG/JSON** — Download `iconsheet.png` and `iconsheet.json` for the Python workflow
 - **Keyboard Shortcuts** — P/E/F/L for tools, Ctrl+Z undo, Ctrl+Shift+Z redo
 
@@ -47,11 +47,11 @@ Outputs a small set of simple example icons as individual PNGs into `assets/`.
 
 **Edit `iconsheet.json`** — Format: `{"name": "icon_name", "row": X, "col": Y}`
 
-### 3. Export to Firmware
+### 3. Export to a .cpp file
 ```
 python3 scripts/export_icons_embedded_cpp.py
 ```
-Reads `iconsheet.json` + `assets/iconsheet.png` → generates `icons_embedded.cpp` in the firmware repo root.
+Reads `iconsheet.json` + `assets/iconsheet.png` → generates `icons_embedded.cpp`
 > **Warning:** Completely regenerates the file and erases previous content.
 
 ### Utilities
