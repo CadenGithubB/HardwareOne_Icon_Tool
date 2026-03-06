@@ -383,6 +383,273 @@ def icon_file_bin(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
     _stroke(draw, [(x + 11, y + 24), (x + 21, y + 24)], w=2)
 
 
+def icon_sun(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x + 10, y + 10, x + 22, y + 22, w=2)
+    for angle_pts in [[(x+16,y+2),(x+16,y+7)],[(x+16,y+25),(x+16,y+30)],[(x+2,y+16),(x+7,y+16)],[(x+25,y+16),(x+30,y+16)],[(x+6,y+6),(x+9,y+9)],[(x+23,y+23),(x+26,y+26)],[(x+23,y+6),(x+26,y+9)],[(x+6,y+23),(x+9,y+26)]]:
+        _stroke(draw, angle_pts, w=2)
+
+
+def icon_moon(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.arc((x+4, y+4, x+28, y+28), start=30, end=270, fill=INK, width=3)
+    draw.arc((x+10, y+6, x+26, y+22), start=210, end=30, fill=(0,0,0,0), width=3)
+    draw.arc((x+8, y+4, x+24, y+20), start=215, end=35, fill=INK, width=2)
+
+
+def icon_notify_bell(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.arc((x+8, y+6, x+24, y+20), start=180, end=0, fill=INK, width=2)
+    _stroke(draw, [(x+8,y+13),(x+8,y+22),(x+24,y+22),(x+24,y+13)], w=2)
+    _stroke(draw, [(x+5,y+22),(x+27,y+22)], w=2)
+    draw.arc((x+13,y+22,x+19,y+28), start=0, end=180, fill=INK, width=2)
+    _stroke(draw, [(x+14,y+6),(x+18,y+6)], w=2)
+
+
+def icon_notify_espnow(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x+10, y+10, x+22, y+22, w=2)
+    for r,w in [(8,1),(5,1)]:
+        draw.arc((x+16-r,y+16-r,x+16+r,y+16+r), start=300, end=60, fill=INK, width=w)
+        draw.arc((x+16-r,y+16-r,x+16+r,y+16+r), start=120, end=240, fill=INK, width=w)
+    draw.ellipse((x+14,y+14,x+18,y+18), fill=INK)
+
+
+def icon_notify_automation(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x+4, y+4, x+16, y+16, w=2)
+    _circle_outline(draw, x+16, y+16, x+28, y+28, w=2)
+    _stroke(draw, [(x+16,y+4),(x+28,y+4),(x+28,y+16)], w=2)
+    _stroke(draw, [(x+4,y+28),(x+16,y+28),(x+4,y+16)], w=2)
+
+
+def icon_notify_server(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+4, y+5, x+28, y+13, w=2)
+    _rect_outline(draw, x+4, y+14, x+28, y+22, w=2)
+    _rect_outline(draw, x+4, y+23, x+28, y+31, w=2)
+    for yy in [9, 18, 27]:
+        draw.ellipse((x+23,yy-2,x+26,yy+1), fill=INK)
+
+
+def icon_notify_sensor(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.ellipse((x+13,y+13,x+19,y+19), fill=INK)
+    for r in [6, 10]:
+        draw.arc((x+16-r,y+16-r,x+16+r,y+16+r), start=225, end=315, fill=INK, width=2)
+        draw.arc((x+16-r,y+16-r,x+16+r,y+16+r), start=45, end=135, fill=INK, width=2)
+    _stroke(draw, [(x+16,y+3),(x+16,y+8)], w=2)
+    _stroke(draw, [(x+16,y+24),(x+16,y+29)], w=2)
+
+
+def icon_notify_logging(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+5, y+4, x+22, y+28, w=2)
+    for yy in [10, 15, 20]:
+        _stroke(draw, [(x+9,y+yy),(x+18,y+yy)], w=2)
+
+
+def icon_notify_files(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+5, y+8, x+22, y+27, w=2)
+    _stroke(draw, [(x+5,y+8),(x+10,y+8),(x+12,y+5),(x+22,y+5),(x+22,y+8)], w=2)
+    for yy in [13, 18, 23]:
+        _stroke(draw, [(x+9,y+yy),(x+18,y+yy)], w=2)
+
+
+def icon_notify_system(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x+10, y+10, x+22, y+22, w=2)
+    draw.ellipse((x+14,y+14,x+18,y+18), fill=INK)
+    for pts in [[(x+16,y+4),(x+16,y+8)],[(x+16,y+24),(x+16,y+28)],[(x+4,y+16),(x+8,y+16)],[(x+24,y+16),(x+28,y+16)]]:
+        _stroke(draw, pts, w=2)
+    for pts in [[(x+8,y+8),(x+10,y+10)],[(x+22,y+22),(x+24,y+24)],[(x+22,y+8),(x+24,y+10)],[(x+8,y+22),(x+10,y+24)]]:
+        _stroke(draw, pts, w=2)
+
+
+def icon_notify_cli(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+3, y+5, x+29, y+27, w=2)
+    _stroke(draw, [(x+7,y+12),(x+12,y+16),(x+7,y+20)], w=2)
+    _stroke(draw, [(x+15,y+20),(x+22,y+20)], w=2)
+
+
+def icon_device(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+8, y+3, x+24, y+29, w=2)
+    _stroke(draw, [(x+13,y+7),(x+19,y+7)], w=2)
+    draw.ellipse((x+14,y+24,x+18,y+28), fill=INK)
+
+
+def icon_compass(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x+4, y+4, x+28, y+28, w=2)
+    draw.polygon([(x+16,y+8),(x+19,y+16),(x+16,y+15),(x+13,y+16)], fill=INK)
+    draw.polygon([(x+16,y+24),(x+19,y+16),(x+16,y+17),(x+13,y+16)], outline=INK)
+
+
+def icon_imu_axes(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+16,y+28),(x+16,y+8)], w=2)
+    _stroke(draw, [(x+16,y+8),(x+13,y+12)], w=2)
+    _stroke(draw, [(x+16,y+8),(x+19,y+12)], w=2)
+    _stroke(draw, [(x+5,y+22),(x+27,y+22)], w=2)
+    _stroke(draw, [(x+27,y+22),(x+23,y+19)], w=2)
+    _stroke(draw, [(x+27,y+22),(x+23,y+25)], w=2)
+    _stroke(draw, [(x+16,y+22),(x+6,y+28)], w=2)
+    _stroke(draw, [(x+6,y+28),(x+8,y+24)], w=2)
+
+
+def icon_thermal(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+16,y+5),(x+16,y+20)], w=3)
+    _rect_outline(draw, x+13, y+5, x+19, y+12, w=2)
+    draw.ellipse((x+10,y+18,x+22,y+28), outline=INK, width=2)
+    draw.ellipse((x+13,y+19,x+19,y+25), fill=INK)
+
+
+def icon_tof_radar(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.ellipse((x+13,y+13,x+19,y+19), fill=INK)
+    for r in [6, 10, 14]:
+        draw.arc((x+16-r,y+16-r,x+16+r,y+16+r), start=210, end=330, fill=INK, width=2)
+    _stroke(draw, [(x+16,y+2),(x+16,y+8)], w=2)
+
+
+def icon_bt_off(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+10,y+22),(x+22,y+10),(x+16,y+4),(x+16,y+28),(x+22,y+22),(x+10,y+10)], w=2)
+    _stroke(draw, [(x+5,y+5),(x+27,y+27)], w=2)
+
+
+def icon_bt_idle(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+10,y+22),(x+22,y+10),(x+16,y+4),(x+16,y+28),(x+22,y+22),(x+10,y+10)], w=2)
+
+
+def icon_bt_advertising(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+10,y+22),(x+22,y+10),(x+16,y+4),(x+16,y+28),(x+22,y+22),(x+10,y+10)], w=2)
+    for r in [5, 9]:
+        draw.arc((x+16-r,y+16-r,x+16+r,y+16+r), start=300, end=60, fill=INK, width=1)
+
+
+def icon_bt_connected(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+10,y+22),(x+22,y+10),(x+16,y+4),(x+16,y+28),(x+22,y+22),(x+10,y+10)], w=2)
+    draw.ellipse((x+22,y+20,x+28,y+26), fill=INK)
+
+
+def icon_speaker(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.polygon([(x+5,y+12),(x+12,y+12),(x+18,y+7),(x+18,y+25),(x+12,y+20),(x+5,y+20)], outline=INK, fill=None)
+    draw.arc((x+20,y+10,x+28,y+22), start=300, end=60, fill=INK, width=2)
+    draw.arc((x+22,y+13,x+29,y+19), start=300, end=60, fill=INK, width=2)
+
+
+def icon_smartphone(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+9, y+3, x+23, y+29, w=2)
+    _stroke(draw, [(x+14,y+6),(x+18,y+6)], w=2)
+    draw.ellipse((x+14,y+25,x+18,y+28), fill=INK)
+
+
+def icon_smart_glasses(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x+4, y+12, x+14, y+22, w=2)
+    _circle_outline(draw, x+18, y+12, x+28, y+22, w=2)
+    _stroke(draw, [(x+14,y+17),(x+18,y+17)], w=2)
+    _stroke(draw, [(x+4,y+17),(x+1,y+15)], w=2)
+    _stroke(draw, [(x+28,y+17),(x+31,y+15)], w=2)
+
+
+def icon_laptop(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+4, y+7, x+28, y+22, w=2)
+    _stroke(draw, [(x+1,y+23),(x+31,y+23)], w=2)
+    _stroke(draw, [(x+1,y+23),(x+4,y+26),(x+28,y+26),(x+31,y+23)], w=2)
+
+
+def icon_headphones(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.arc((x+5,y+5,x+27,y+20), start=180, end=0, fill=INK, width=2)
+    _rect_outline(draw, x+4, y+16, x+10, y+24, w=2)
+    _rect_outline(draw, x+22, y+16, x+28, y+24, w=2)
+
+
+def icon_watch(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x+8, y+8, x+24, y+24, w=2)
+    _stroke(draw, [(x+13,y+4),(x+19,y+4),(x+19,y+7)], w=2)
+    _stroke(draw, [(x+13,y+28),(x+19,y+28),(x+19,y+25)], w=2)
+    _stroke(draw, [(x+16,y+12),(x+16,y+16),(x+20,y+16)], w=2)
+
+
+def icon_gamepad(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+4, y+10, x+28, y+22, w=2)
+    _stroke(draw, [(x+10,y+13),(x+10,y+19)], w=2)
+    _stroke(draw, [(x+7,y+16),(x+13,y+16)], w=2)
+    draw.ellipse((x+19,y+13,x+22,y+16), fill=INK)
+    draw.ellipse((x+22,y+16,x+25,y+19), fill=INK)
+
+
+def icon_power(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.arc((x+7,y+7,x+25,y+25), start=135, end=45, fill=INK, width=3)
+    _stroke(draw, [(x+16,y+4),(x+16,y+16)], w=3)
+
+
+def icon_memory(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+4, y+8, x+28, y+24, w=2)
+    for xx in [9, 14, 19, 24]:
+        _stroke(draw, [(x+xx,y+5),(x+xx,y+9)], w=2)
+        _stroke(draw, [(x+xx,y+23),(x+xx,y+27)], w=2)
+
+
+def icon_terminal(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+3, y+5, x+29, y+27, w=2)
+    _stroke(draw, [(x+7,y+12),(x+12,y+16),(x+7,y+20)], w=2)
+    _stroke(draw, [(x+15,y+20),(x+23,y+20)], w=2)
+
+
+def icon_user(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.ellipse((x+11,y+5,x+21,y+15), outline=INK, width=2)
+    draw.arc((x+5,y+14,x+27,y+30), start=180, end=0, fill=INK, width=2)
+
+
+def icon_led(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    draw.ellipse((x+10,y+6,x+22,y+18), outline=INK, width=2)
+    _stroke(draw, [(x+13,y+18),(x+13,y+24),(x+19,y+24),(x+19,y+18)], w=2)
+    _stroke(draw, [(x+11,y+26),(x+21,y+26)], w=2)
+    _stroke(draw, [(x+23,y+9),(x+27,y+7)], w=2)
+    _stroke(draw, [(x+24,y+13),(x+28,y+13)], w=2)
+    _stroke(draw, [(x+23,y+17),(x+27,y+19)], w=2)
+
+
+def icon_radio(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _rect_outline(draw, x+3, y+12, x+29, y+28, w=2)
+    draw.ellipse((x+6,y+16,x+14,y+24), outline=INK, width=2)
+    _stroke(draw, [(x+18,y+18),(x+26,y+18)], w=2)
+    _stroke(draw, [(x+18,y+22),(x+23,y+22)], w=2)
+    _stroke(draw, [(x+20,y+5),(x+16,y+12)], w=2)
+    draw.arc((x+18,y+4,x+28,y+14), start=200, end=340, fill=INK, width=2)
+
+
+def icon_gesture(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _stroke(draw, [(x+16,y+4),(x+16,y+18)], w=3)
+    _stroke(draw, [(x+11,y+9),(x+11,y+18)], w=3)
+    _stroke(draw, [(x+21,y+9),(x+21,y+18)], w=3)
+    draw.arc((x+8,y+16,x+24,y+28), start=0, end=180, fill=INK, width=2)
+
+
+def icon_clock(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x + 4, y + 4, x + 27, y + 27, w=2)
+    _stroke(draw, [(x + 16, y + 9), (x + 16, y + 16), (x + 22, y + 16)], w=2)
+    draw.ellipse((x + 14, y + 14, x + 18, y + 18), fill=INK)
+
+
+def icon_bond(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x + 4, y + 10, x + 14, y + 20, w=2)
+    _circle_outline(draw, x + 18, y + 10, x + 28, y + 20, w=2)
+    _stroke(draw, [(x + 14, y + 15), (x + 18, y + 15)], w=2)
+
+
+def icon_bond_off(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x + 4, y + 10, x + 14, y + 20, w=2)
+    _circle_outline(draw, x + 18, y + 10, x + 28, y + 20, w=2)
+    _stroke(draw, [(x + 14, y + 15), (x + 18, y + 15)], w=2)
+    _stroke(draw, [(x + 4, y + 4), (x + 28, y + 28)], w=2)
+
+
+def icon_bond_sync(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x + 4, y + 10, x + 14, y + 20, w=2)
+    _circle_outline(draw, x + 18, y + 10, x + 28, y + 20, w=2)
+    _stroke(draw, [(x + 14, y + 15), (x + 18, y + 15)], w=2)
+    draw.arc((x + 11, y + 4, x + 21, y + 12), start=200, end=340, fill=INK, width=2)
+    _stroke(draw, [(x + 21, y + 8), (x + 23, y + 6), (x + 21, y + 4)], w=2)
+
+
+def icon_bond_search(draw: ImageDraw.ImageDraw, x: int, y: int) -> None:
+    _circle_outline(draw, x + 4, y + 10, x + 14, y + 20, w=2)
+    _circle_outline(draw, x + 18, y + 10, x + 28, y + 20, w=2)
+    _stroke(draw, [(x + 14, y + 15), (x + 18, y + 15)], w=2)
+    _circle_outline(draw, x + 18, y + 3, x + 26, y + 11, w=2)
+    _stroke(draw, [(x + 25, y + 10), (x + 28, y + 13)], w=2)
+
+
 ICON_LAYOUT = [
     # row 0
     ("smiley", 0, 0),
@@ -436,6 +703,48 @@ ICON_LAYOUT = [
     ("file_json", 3, 4),
     ("file_pdf", 3, 5),
     ("file_bin", 3, 6),
+    ("sun", 3, 7),
+    ("moon", 3, 8),
+    ("notify_bell", 3, 9),
+    ("notify_espnow", 3, 10),
+    ("notify_automation", 3, 11),
+    ("notify_server", 3, 12),
+    ("notify_sensor", 3, 13),
+    ("notify_logging", 3, 14),
+    # row 4
+    ("notify_files", 4, 0),
+    ("notify_system", 4, 1),
+    ("notify_cli", 4, 2),
+    ("device", 4, 3),
+    ("compass", 4, 4),
+    ("imu_axes", 4, 5),
+    ("bt_off", 4, 6),
+    ("bt_idle", 4, 7),
+    ("bt_advertising", 4, 8),
+    ("bt_connected", 4, 9),
+    # row 5
+    ("thermal", 5, 0),
+    ("tof_radar", 5, 1),
+    ("speaker", 5, 2),
+    ("smartphone", 5, 3),
+    ("smart_glasses", 5, 4),
+    ("laptop", 5, 5),
+    ("headphones", 5, 6),
+    ("watch", 5, 7),
+    ("gamepad", 5, 8),
+    ("power", 5, 9),
+    ("memory", 5, 10),
+    ("terminal", 5, 11),
+    ("user", 5, 12),
+    ("led", 5, 13),
+    ("radio", 5, 14),
+    # row 6
+    ("gesture", 6, 0),
+    ("clock", 6, 1),
+    ("bond", 6, 2),
+    ("bond_off", 6, 3),
+    ("bond_sync", 6, 4),
+    ("bond_search", 6, 5),
 ]
 
 
@@ -495,6 +804,45 @@ def main() -> int:
         "file_json": icon_file_json,
         "file_pdf": icon_file_pdf,
         "file_bin": icon_file_bin,
+        "sun": icon_sun,
+        "moon": icon_moon,
+        "notify_bell": icon_notify_bell,
+        "notify_espnow": icon_notify_espnow,
+        "notify_automation": icon_notify_automation,
+        "notify_server": icon_notify_server,
+        "notify_sensor": icon_notify_sensor,
+        "notify_logging": icon_notify_logging,
+        "notify_files": icon_notify_files,
+        "notify_system": icon_notify_system,
+        "notify_cli": icon_notify_cli,
+        "device": icon_device,
+        "compass": icon_compass,
+        "imu_axes": icon_imu_axes,
+        "thermal": icon_thermal,
+        "tof_radar": icon_tof_radar,
+        "bt_off": icon_bt_off,
+        "bt_idle": icon_bt_idle,
+        "bt_advertising": icon_bt_advertising,
+        "bt_connected": icon_bt_connected,
+        "speaker": icon_speaker,
+        "smartphone": icon_smartphone,
+        "smart_glasses": icon_smart_glasses,
+        "laptop": icon_laptop,
+        "headphones": icon_headphones,
+        "watch": icon_watch,
+        "gamepad": icon_gamepad,
+        "power": icon_power,
+        "memory": icon_memory,
+        "terminal": icon_terminal,
+        "user": icon_user,
+        "led": icon_led,
+        "radio": icon_radio,
+        "gesture": icon_gesture,
+        "clock": icon_clock,
+        "bond": icon_bond,
+        "bond_off": icon_bond_off,
+        "bond_sync": icon_bond_sync,
+        "bond_search": icon_bond_search,
     }
 
     for (name, row, col) in ICON_LAYOUT:

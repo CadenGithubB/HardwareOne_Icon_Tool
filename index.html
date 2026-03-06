@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HardwareOne Icon Generator</title>
+
+<script>
+    (function() {
+        try {
+            const saved = localStorage.getItem('hw_icon_tool_theme');
+            const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = saved === 'light' || saved === 'dark' ? saved : (systemDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (_) {}
+    })();
+</script>
+
+<style>
+    :root {
+        --bg: linear-gradient(135deg, #667eea 0%, #764ba2 60%);
+        --fg: #fff;
+        --muted: rgba(255,255,255,.75);
+        --card-bg: rgba(255,255,255,.10);
+        --card-border: rgba(255,255,255,.20);
+        --panel-bg: rgba(255,255,255,.10);
+        --panel-fg: #fff;
+        --panel-elevated: rgba(255,255,255,.14);
+        --border: rgba(255,255,255,.22);
+        --accent: #bcd0ff;
+        --accent-strong: #dbe7ff;
+        --accent-contrast: #1b1e2f;
+        --secondary-bg: rgba(255,255,255,.80);
+        --secondary-fg: #333;
+        --secondary-hover: rgba(255,255,255,.92);
+        --field-bg: rgba(255,255,255,.10);
+        --field-border: rgba(255,255,255,.22);
+        --field-fg: #fff;
+        --surface-soft: rgba(255,255,255,.08);
+        --surface-strong: rgba(255,255,255,.12);
+        --danger: #dc3545;
+        --danger-soft: rgba(220,53,69,.16);
+        --status-success-bg: rgba(40,167,69,.16);
+        --status-success-fg: #d4edda;
+    }
+
+    html[data-theme="dark"] {
+        --bg: linear-gradient(135deg, #07070b 0%, #151520 100%);
+        --fg: #f2f2f7;
+        --muted: rgba(242,242,247,.72);
+        --card-bg: rgba(255,255,255,.04);
+        --card-border: rgba(255,255,255,.12);
+        --panel-bg: rgba(18,18,26,.92);
+        --panel-fg: #f2f2f7;
+        --panel-elevated: rgba(30,30,40,.92);
+        --border: rgba(255,255,255,.14);
+        --accent: #8ab4ff;
+        --accent-strong: #b9d0ff;
+        --accent-contrast: #0b1020;
+        --secondary-bg: rgba(30,30,40,.92);
+        --secondary-fg: #f2f2f7;
+        --secondary-hover: rgba(52,52,66,.96);
+        --field-bg: rgba(255,255,255,.06);
+        --field-border: rgba(255,255,255,.14);
+        --field-fg: #f2f2f7;
+        --surface-soft: rgba(255,255,255,.05);
+        --surface-strong: rgba(255,255,255,.09);
+        --danger: #ff5a6a;
+        --danger-soft: rgba(255,90,106,.14);
+        --status-success-bg: rgba(34,197,94,.16);
+        --status-success-fg: #86efac;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        user-select: none;
+        line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+        text-align: center;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+    }
+
+    .header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        max-width: 95%;
+        margin: 0 auto;
+    }
+
+    .header-copy { flex: 1; text-align: center; }
+
+    header h1 {
+        font-size: 1.5em;
+        color: var(--accent-strong);
+        margin-bottom: 2px;
+    }
+
+    header p {
+        color: var(--muted);
+        font-size: 0.85em;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 40px;
+        min-height: 36px;
+        padding: .3rem .6rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--secondary-bg);
+        color: var(--secondary-fg);
+        cursor: pointer;
+        transition: all .2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,.1);
+        font-size: 1.1rem;
+    }
+
+    .theme-toggle:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,.15);
+        background: var(--secondary-hover);
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 8px 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--secondary-bg);
+        color: var(--secondary-fg);
+        font-size: 0.85em;
+        cursor: pointer;
+        transition: all 0.2s;
+        white-space: nowrap;
+    }
+
+    .btn:hover { background: var(--secondary-hover); }
+
+    .btn-primary {
+        background: var(--secondary-bg);
+        color: var(--accent);
+        font-weight: bold;
+        border-color: var(--accent);
+    }
+
+    .btn-primary:hover { background: var(--secondary-hover); }
+
+    .btn-clear {
+        background: var(--danger-soft);
+        color: var(--danger);
+        border: 1px solid var(--danger);
+    }
+
+    .btn-clear:hover { background: rgba(220,53,69,.22); }
+
+    .btn-sm { padding: 5px 10px; font-size: 0.8em; }
+
+    .btn.active {
+        background: var(--surface-strong);
+        color: var(--accent);
+        border-color: var(--accent);
+        font-weight: bold;
+    }
+
+    /* Main layout */
+    .main {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 220px 1fr 210px;
+        gap: 14px;
+        padding: 14px;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+    /* Panels (cards) */
+    .panel {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0,0,0,.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .panel-header {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.8em;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .icon-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+    }
+
+    .icon-list-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 7px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s;
+        margin-bottom: 2px;
+    }
+
+    .icon-list-item:hover { background: var(--surface-strong); }
+    .icon-list-item.active {
+        background: var(--surface-strong);
+        border-left: 3px solid var(--accent);
+    }
+    .icon-list-item.active .icon-name { color: var(--accent); font-weight: 600; }
+
+    .icon-list-item canvas {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        image-rendering: pixelated;
+        flex-shrink: 0;
+    }
+
+    .icon-list-item .icon-name {
+        font-size: 0.85em;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--fg);
+    }
+
+    .icon-list-item .icon-delete {
+        opacity: 0;
+        transition: opacity 0.15s;
+        color: var(--danger);
+        cursor: pointer;
+        font-size: 14px;
+        padding: 2px 4px;
+        flex-shrink: 0;
+    }
+
+    .icon-list-item:hover .icon-delete { opacity: 0.7; }
+    .icon-list-item .icon-delete:hover { opacity: 1; }
+
+    /* Center panel */
+    .panel-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        overflow: hidden;
+    }
+
+    .canvas-container {
+        position: relative;
+        border: 2px solid var(--card-border);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #000;
+        box-shadow: 0 8px 32px rgba(0,0,0,.12);
+    }
+
+    #drawCanvas {
+        display: block;
+        cursor: crosshair;
+    }
+
+    .preview-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border: 1px solid var(--card-border);
+        border-radius: 10px;
+        padding: 10px 16px;
+    }
+
+    .preview-label {
+        font-size: 0.75em;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #previewCanvas, #previewCanvas2x {
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        image-rendering: pixelated;
+        background: #000;
+    }
+
+    .no-icon-msg {
+        color: var(--muted);
+        font-size: 0.9em;
+        text-align: center;
+        line-height: 1.8;
+    }
+
+    .no-icon-msg strong { color: var(--accent-strong); }
+
+    /* Right panel (tools) */
+    .panel-tools {
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .section-title {
+        font-size: 0.75em;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+        padding: 6px 8px;
+        background: var(--surface-soft);
+        border-radius: 4px;
+        border: 1px solid var(--border);
+    }
+
+    .tool-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
+        margin-bottom: 14px;
+    }
+
+    .tool-grid .btn {
+        text-align: center;
+        font-size: 0.8em;
+        padding: 7px 4px;
+    }
+
+    .info-box {
+        background: var(--surface-soft);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 10px;
+        font-size: 0.8em;
+        line-height: 1.6;
+        color: var(--muted);
+    }
+
+    .info-box strong { color: var(--accent); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--surface-strong); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border); }
+
+    /* Modal */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal {
+        background: var(--panel-elevated);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--card-border);
+        border-radius: 15px;
+        padding: 24px;
+        min-width: 340px;
+        box-shadow: 0 16px 48px rgba(0,0,0,.25);
+    }
+
+    .modal h2 {
+        font-size: 1.1em;
+        margin-bottom: 14px;
+        color: var(--accent-strong);
+    }
+
+    .modal input[type="text"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid var(--field-border);
+        border-radius: 6px;
+        background: var(--field-bg);
+        color: var(--field-fg);
+        font-size: 0.95em;
+        margin-bottom: 14px;
+        outline: none;
+    }
+
+    .modal input[type="text"]:focus { border-color: var(--accent); }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    .modal p {
+        font-size: 0.85em;
+        color: var(--muted);
+        margin-bottom: 14px;
+        line-height: 1.5;
+    }
+
+    .modal label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85em;
+        color: var(--muted);
+        margin-bottom: 12px;
+        cursor: pointer;
+    }
+
+    .modal label input[type="checkbox"] { accent-color: var(--accent); }
+
+    .modal input[type="file"] {
+        font-size: 0.85em;
+        color: var(--muted);
+        margin-bottom: 10px;
+    }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent);
+        color: var(--accent-contrast);
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 0.85em;
+        font-weight: 600;
+        z-index: 200;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+        box-shadow: 0 4px 16px rgba(0,0,0,.2);
+    }
+
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 900px) {
+        .main {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto 1fr auto;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <div class="header-actions">
+            <button class="btn" onclick="importIconsheet()">Import</button>
+        </div>
+        <div class="header-copy">
+            <h1>HardwareOne Icon Generator</h1>
+            <p>Create 32&times;32 monochrome icons for your ESP32 device</p>
+        </div>
+        <div class="header-actions">
+            <button class="btn" onclick="exportJson()">Export JSON</button>
+            <button class="btn" onclick="exportIconsheetPng()">Export PNG</button>
+            <button class="btn btn-primary" onclick="exportCpp()">Export C++</button>
+            <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle theme">&#9728;&#65039;</button>
+        </div>
+    </div>
+</header>
+
+<div class="main">
+    <!-- Left: Icon List -->
+    <div class="panel">
+        <div class="panel-header">
+            <span>Icons (<span id="iconCount">0</span>)</span>
+            <div style="display:flex;gap:4px;">
+                <button class="btn btn-sm" onclick="loadStandardIcons()">&#9733; Defaults</button>
+                <button class="btn btn-sm" onclick="showAddIconModal()">+ Add</button>
+            </div>
+        </div>
+        <div class="icon-list" id="iconList"></div>
+    </div>
+
+    <!-- Center: Drawing Canvas -->
+    <div class="panel-center" id="centerPanel">
+        <div class="no-icon-msg" id="noIconMsg">
+            Click <strong>+ Add</strong> to create your first icon<br>
+            or <strong>Import</strong> an existing iconsheet
+        </div>
+        <div class="canvas-container" id="canvasContainer" style="display:none">
+            <canvas id="drawCanvas"></canvas>
+        </div>
+        <div class="preview-row" id="previewRow" style="display:none">
+            <span class="preview-label">1&times;</span>
+            <canvas id="previewCanvas" width="32" height="32"></canvas>
+            <span class="preview-label">2&times;</span>
+            <canvas id="previewCanvas2x" width="64" height="64"></canvas>
+            <span class="preview-label" id="iconNameLabel" style="color:var(--accent-strong); font-size:0.9em; font-weight:600;"></span>
+        </div>
+    </div>
+
+    <!-- Right: Tools -->
+    <div class="panel panel-tools">
+        <div class="section-title">Tools</div>
+        <div class="tool-grid">
+            <button class="btn active" id="tool-pen" onclick="setTool('pen')">&#9998; Pen</button>
+            <button class="btn" id="tool-eraser" onclick="setTool('eraser')">&#9634; Eraser</button>
+            <button class="btn" id="tool-fill" onclick="setTool('fill')">&#9638; Fill</button>
+            <button class="btn" id="tool-line" onclick="setTool('line')">&#9585; Line</button>
+        </div>
+
+        <div class="section-title">Actions</div>
+        <div class="tool-grid">
+            <button class="btn" onclick="clearCanvas()">Clear</button>
+            <button class="btn" onclick="invertCanvas()">Invert</button>
+            <button class="btn" onclick="mirrorH()">&#8596; Mirror</button>
+            <button class="btn" onclick="mirrorV()">&#8597; Mirror</button>
+            <button class="btn" onclick="shiftIcon('left')">&#8592; Shift</button>
+            <button class="btn" onclick="shiftIcon('right')">&#8594; Shift</button>
+            <button class="btn" onclick="shiftIcon('up')">&#8593; Shift</button>
+            <button class="btn" onclick="shiftIcon('down')">&#8595; Shift</button>
+        </div>
+
+        <div class="section-title">History</div>
+        <div class="tool-grid">
+            <button class="btn" onclick="undo()">&#8617; Undo</button>
+            <button class="btn" onclick="redo()">&#8618; Redo</button>
+        </div>
+
+        <div class="section-title">Shortcuts</div>
+        <div class="info-box">
+            <strong>P</strong> Pen &nbsp; <strong>E</strong> Eraser<br>
+            <strong>F</strong> Fill &nbsp; <strong>L</strong> Line<br>
+            <strong>Ctrl+Z</strong> Undo<br>
+            <strong>Ctrl+Shift+Z</strong> Redo<br>
+            <strong>Right-click</strong> Erase pixel
+        </div>
+
+        <div class="section-title" style="margin-top:4px;">Info</div>
+        <div class="info-box" id="infoBox">
+            <strong>Grid:</strong> 32 &times; 32 px<br>
+            <strong>Format:</strong> 1-bit monochrome<br>
+            <strong>Bitmap:</strong> 128 bytes/icon<br>
+            <strong>Output:</strong> PROGMEM arrays
+        </div>
+    </div>
+</div>
+
+<!-- Add Icon Modal -->
+<div class="modal-overlay" id="addIconModal">
+    <div class="modal">
+        <h2>New Icon</h2>
+        <input type="text" id="newIconName" placeholder="icon_name (letters, digits, underscore)"
+               onkeydown="if(event.key==='Enter')addIcon()">
+        <div class="modal-actions">
+            <button class="btn" onclick="hideAddIconModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="addIcon()">Create</button>
+        </div>
+    </div>
+</div>
+
+<!-- Rename Icon Modal -->
+<div class="modal-overlay" id="renameIconModal">
+    <div class="modal">
+        <h2>Rename Icon</h2>
+        <input type="text" id="renameIconName" placeholder="new_name"
+               onkeydown="if(event.key==='Enter')confirmRename()">
+        <div class="modal-actions">
+            <button class="btn" onclick="hideRenameModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmRename()">Rename</button>
+        </div>
+    </div>
+</div>
+
+<!-- Import Modal -->
+<div class="modal-overlay" id="importModal">
+    <div class="modal">
+        <h2>Import Iconsheet</h2>
+        <p>Select your <strong>iconsheet.json</strong> and <strong>iconsheet.png</strong> files to import existing icons.</p>
+        <label><span>JSON file:</span></label>
+        <input type="file" id="importJsonFile" accept=".json">
+        <label><span>PNG file:</span></label>
+        <input type="file" id="importPngFile" accept=".png">
+        <label>
+            <input type="checkbox" id="importInvert"> Invert colors (use if icons are dark shapes on white background)
+        </label>
+        <div class="modal-actions">
+            <button class="btn" onclick="hideImportModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="doImport()">Import</button>
+        </div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// Constants
+// ============================================================
+const TILE = 32;
+const SCALE = 14;
+const CANVAS_PX = TILE * SCALE;
+const ICONS_PER_ROW = 15;
+
+// ============================================================
+// State
+// ============================================================
+let icons = [];
+let currentIdx = -1;
+let currentTool = 'pen';
+let isDrawing = false;
+let drawValue = 1;
+let history = [];
+let redoStack = [];
+let lineStart = null;    // for line tool
+let lineEnd = null;      // for line preview
+let renameIdx = -1;
+
+// ============================================================
+// Canvas setup
+// ============================================================
+const drawCanvas = document.getElementById('drawCanvas');
+const drawCtx = drawCanvas.getContext('2d');
+drawCanvas.width = CANVAS_PX;
+drawCanvas.height = CANVAS_PX;
+
+const previewCanvas = document.getElementById('previewCanvas');
+const previewCtx = previewCanvas.getContext('2d');
+
+const preview2x = document.getElementById('previewCanvas2x');
+const preview2xCtx = preview2x.getContext('2d');
+
+// ============================================================
+// Rendering
+// ============================================================
+function renderCanvas() {
+  drawCtx.fillStyle = '#111';
+  drawCtx.fillRect(0, 0, CANVAS_PX, CANVAS_PX);
+
+  if (currentIdx >= 0 && currentIdx < icons.length) {
+    const px = icons[currentIdx].pixels;
+    for (let y = 0; y < TILE; y++) {
+      for (let x = 0; x < TILE; x++) {
+        if (px[y * TILE + x]) {
+          drawCtx.fillStyle = '#ffffff';
+          drawCtx.fillRect(x * SCALE, y * SCALE, SCALE, SCALE);
+        }
+      }
+    }
+  }
+
+  // Grid
+  drawCtx.strokeStyle = 'rgba(255,255,255,0.07)';
+  drawCtx.lineWidth = 1;
+  for (let i = 0; i <= TILE; i++) {
+    const p = i * SCALE + 0.5;
+    drawCtx.beginPath(); drawCtx.moveTo(p, 0); drawCtx.lineTo(p, CANVAS_PX); drawCtx.stroke();
+    drawCtx.beginPath(); drawCtx.moveTo(0, p); drawCtx.lineTo(CANVAS_PX, p); drawCtx.stroke();
+  }
+
+  // Center crosshair guides (subtle)
+  drawCtx.strokeStyle = 'rgba(0,212,170,0.12)';
+  const mid = 16 * SCALE + 0.5;
+  drawCtx.beginPath(); drawCtx.moveTo(mid, 0); drawCtx.lineTo(mid, CANVAS_PX); drawCtx.stroke();
+  drawCtx.beginPath(); drawCtx.moveTo(0, mid); drawCtx.lineTo(CANVAS_PX, mid); drawCtx.stroke();
+
+  // Line tool preview
+  if (lineStart && lineEnd) {
+    drawCtx.fillStyle = drawValue ? 'rgba(138,180,255,0.5)' : 'rgba(255,90,90,0.45)';
+    const pts = getLinePoints(lineStart[0], lineStart[1], lineEnd[0], lineEnd[1]);
+    for (const [lx, ly] of pts) {
+      drawCtx.fillRect(lx * SCALE, ly * SCALE, SCALE, SCALE);
+    }
+  }
+
+  renderPreview();
+}
+
+function renderPreview() {
+  previewCtx.fillStyle = '#000';
+  previewCtx.fillRect(0, 0, 32, 32);
+  preview2xCtx.fillStyle = '#000';
+  preview2xCtx.fillRect(0, 0, 64, 64);
+
+  if (currentIdx < 0 || currentIdx >= icons.length) return;
+  const px = icons[currentIdx].pixels;
+
+  const imgData = previewCtx.createImageData(32, 32);
+  for (let y = 0; y < TILE; y++) {
+    for (let x = 0; x < TILE; x++) {
+      if (px[y * TILE + x]) {
+        const i = (y * 32 + x) * 4;
+        imgData.data[i] = imgData.data[i+1] = imgData.data[i+2] = 255;
+        imgData.data[i+3] = 255;
+      }
+    }
+  }
+  previewCtx.putImageData(imgData, 0, 0);
+
+  preview2xCtx.imageSmoothingEnabled = false;
+  preview2xCtx.drawImage(previewCanvas, 0, 0, 64, 64);
+}
+
+function renderIconList() {
+  const list = document.getElementById('iconList');
+  list.innerHTML = '';
+  document.getElementById('iconCount').textContent = icons.length;
+
+  icons.forEach((icon, i) => {
+    const item = document.createElement('div');
+    item.className = 'icon-list-item' + (i === currentIdx ? ' active' : '');
+    item.onclick = () => selectIcon(i);
+    item.ondblclick = () => showRenameModal(i);
+
+    const thumb = document.createElement('canvas');
+    thumb.width = 32; thumb.height = 32;
+    thumb.style.width = '28px'; thumb.style.height = '28px';
+    const tc = thumb.getContext('2d');
+    tc.fillStyle = '#000';
+    tc.fillRect(0, 0, 32, 32);
+    const td = tc.createImageData(32, 32);
+    for (let y = 0; y < TILE; y++)
+      for (let x = 0; x < TILE; x++)
+        if (icon.pixels[y * TILE + x]) {
+          const idx = (y * 32 + x) * 4;
+          td.data[idx] = td.data[idx+1] = td.data[idx+2] = td.data[idx+3] = 255;
+        }
+    tc.putImageData(td, 0, 0);
+
+    const name = document.createElement('span');
+    name.className = 'icon-name';
+    name.textContent = icon.name;
+
+    const del = document.createElement('span');
+    del.className = 'icon-delete';
+    del.textContent = '\u2715';
+    del.onclick = (e) => { e.stopPropagation(); deleteIcon(i); };
+
+    item.appendChild(thumb);
+    item.appendChild(name);
+    item.appendChild(del);
+    list.appendChild(item);
+  });
+
+  const hasIcon = currentIdx >= 0 && currentIdx < icons.length;
+  document.getElementById('noIconMsg').style.display = hasIcon ? 'none' : '';
+  document.getElementById('canvasContainer').style.display = hasIcon ? '' : 'none';
+  document.getElementById('previewRow').style.display = hasIcon ? 'flex' : 'none';
+  if (hasIcon) {
+    document.getElementById('iconNameLabel').textContent = icons[currentIdx].name;
+  }
+}
+
+// ============================================================
+// Icon CRUD
+// ============================================================
+function selectIcon(i) {
+  currentIdx = i;
+  history = [];
+  redoStack = [];
+  renderCanvas();
+  renderIconList();
+}
+
+function showAddIconModal() {
+  document.getElementById('addIconModal').classList.add('show');
+  const inp = document.getElementById('newIconName');
+  inp.value = '';
+  setTimeout(() => inp.focus(), 50);
+}
+
+function hideAddIconModal() {
+  document.getElementById('addIconModal').classList.remove('show');
+}
+
+function addIcon() {
+  const inp = document.getElementById('newIconName');
+  let name = inp.value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  if (!name) return;
+  if (/^[0-9]/.test(name)) name = '_' + name;
+  if (icons.some(ic => ic.name === name)) {
+    alert('An icon with that name already exists.');
+    return;
+  }
+  icons.push({ name, pixels: new Uint8Array(TILE * TILE) });
+  hideAddIconModal();
+  selectIcon(icons.length - 1);
+  showToast('Created icon: ' + name);
+}
+
+function deleteIcon(i) {
+  if (!confirm('Delete icon "' + icons[i].name + '"?')) return;
+  const name = icons[i].name;
+  icons.splice(i, 1);
+  if (currentIdx >= icons.length) currentIdx = icons.length - 1;
+  if (icons.length === 0) currentIdx = -1;
+  history = []; redoStack = [];
+  renderCanvas();
+  renderIconList();
+  showToast('Deleted: ' + name);
+}
+
+function showRenameModal(i) {
+  renameIdx = i;
+  document.getElementById('renameIconModal').classList.add('show');
+  const inp = document.getElementById('renameIconName');
+  inp.value = icons[i].name;
+  setTimeout(() => { inp.focus(); inp.select(); }, 50);
+}
+
+function hideRenameModal() {
+  document.getElementById('renameIconModal').classList.remove('show');
+  renameIdx = -1;
+}
+
+function confirmRename() {
+  if (renameIdx < 0) return;
+  const inp = document.getElementById('renameIconName');
+  let name = inp.value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  if (!name) return;
+  if (/^[0-9]/.test(name)) name = '_' + name;
+  if (icons.some((ic, j) => ic.name === name && j !== renameIdx)) {
+    alert('An icon with that name already exists.');
+    return;
+  }
+  icons[renameIdx].name = name;
+  hideRenameModal();
+  renderIconList();
+  showToast('Renamed to: ' + name);
+}
+
+// ============================================================
+// Drawing
+// ============================================================
+function pushHistory() {
+  if (currentIdx < 0) return;
+  history.push(new Uint8Array(icons[currentIdx].pixels));
+  if (history.length > 100) history.shift();
+  redoStack = [];
+}
+
+function undo() {
+  if (currentIdx < 0 || history.length === 0) return;
+  redoStack.push(new Uint8Array(icons[currentIdx].pixels));
+  icons[currentIdx].pixels = history.pop();
+  renderCanvas();
+  renderIconList();
+}
+
+function redo() {
+  if (currentIdx < 0 || redoStack.length === 0) return;
+  history.push(new Uint8Array(icons[currentIdx].pixels));
+  icons[currentIdx].pixels = redoStack.pop();
+  renderCanvas();
+  renderIconList();
+}
+
+function canvasCoords(e) {
+  const rect = drawCanvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - rect.left) / SCALE);
+  const y = Math.floor((e.clientY - rect.top) / SCALE);
+  return [Math.max(0, Math.min(TILE - 1, x)), Math.max(0, Math.min(TILE - 1, y))];
+}
+
+function setPixel(x, y, val) {
+  if (currentIdx < 0) return;
+  icons[currentIdx].pixels[y * TILE + x] = val;
+}
+
+function getPixel(x, y) {
+  if (currentIdx < 0) return 0;
+  return icons[currentIdx].pixels[y * TILE + x];
+}
+
+drawCanvas.addEventListener('mousedown', (e) => {
+  e.preventDefault();
+  if (currentIdx < 0) return;
+  const [x, y] = canvasCoords(e);
+
+  if (currentTool === 'fill') {
+    pushHistory();
+    floodFill(x, y, getPixel(x, y) ? 0 : 1);
+    renderCanvas();
+    renderIconList();
+    return;
+  }
+
+  if (currentTool === 'line') {
+    lineStart = [x, y];
+    drawValue = (e.button === 2) ? 0 : 1;
+    pushHistory();
+    return;
+  }
+
+  pushHistory();
+  isDrawing = true;
+  drawValue = (currentTool === 'eraser' || e.button === 2) ? 0 : 1;
+  setPixel(x, y, drawValue);
+  renderCanvas();
+});
+
+drawCanvas.addEventListener('mousemove', (e) => {
+  if (currentIdx < 0) return;
+  const [x, y] = canvasCoords(e);
+
+  // Line tool: update preview
+  if (currentTool === 'line' && lineStart) {
+    lineEnd = [x, y];
+    renderCanvas();
+    return;
+  }
+
+  if (!isDrawing) return;
+  setPixel(x, y, drawValue);
+  renderCanvas();
+});
+
+drawCanvas.addEventListener('mouseup', (e) => {
+  if (currentTool === 'line' && lineStart && currentIdx >= 0) {
+    const [x, y] = canvasCoords(e);
+    bresenhamLine(lineStart[0], lineStart[1], x, y, drawValue);
+    lineStart = null;
+    lineEnd = null;
+    renderCanvas();
+    renderIconList();
+    return;
+  }
+  if (isDrawing) {
+    isDrawing = false;
+    renderIconList();
+  }
+});
+
+drawCanvas.addEventListener('mouseleave', () => {
+  if (isDrawing) { isDrawing = false; renderIconList(); }
+});
+
+drawCanvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+// ============================================================
+// Tools
+// ============================================================
+function setTool(tool) {
+  currentTool = tool;
+  ['pen', 'eraser', 'fill', 'line'].forEach(t => {
+    const el = document.getElementById('tool-' + t);
+    if (el) el.classList.toggle('active', t === tool);
+  });
+}
+
+function clearCanvas() {
+  if (currentIdx < 0) return;
+  pushHistory();
+  icons[currentIdx].pixels.fill(0);
+  renderCanvas();
+  renderIconList();
+}
+
+function invertCanvas() {
+  if (currentIdx < 0) return;
+  pushHistory();
+  const px = icons[currentIdx].pixels;
+  for (let i = 0; i < px.length; i++) px[i] = px[i] ? 0 : 1;
+  renderCanvas();
+  renderIconList();
+}
+
+function mirrorH() {
+  if (currentIdx < 0) return;
+  pushHistory();
+  const px = icons[currentIdx].pixels;
+  for (let y = 0; y < TILE; y++)
+    for (let x = 0; x < TILE / 2; x++) {
+      const a = y * TILE + x, b = y * TILE + (TILE - 1 - x);
+      [px[a], px[b]] = [px[b], px[a]];
+    }
+  renderCanvas(); renderIconList();
+}
+
+function mirrorV() {
+  if (currentIdx < 0) return;
+  pushHistory();
+  const px = icons[currentIdx].pixels;
+  for (let y = 0; y < TILE / 2; y++)
+    for (let x = 0; x < TILE; x++) {
+      const a = y * TILE + x, b = (TILE - 1 - y) * TILE + x;
+      [px[a], px[b]] = [px[b], px[a]];
+    }
+  renderCanvas(); renderIconList();
+}
+
+function shiftIcon(dir) {
+  if (currentIdx < 0) return;
+  pushHistory();
+  const px = icons[currentIdx].pixels;
+  const copy = new Uint8Array(px);
+  px.fill(0);
+  for (let y = 0; y < TILE; y++)
+    for (let x = 0; x < TILE; x++) {
+      let sx = x, sy = y;
+      if (dir === 'left') sx = x + 1;
+      else if (dir === 'right') sx = x - 1;
+      else if (dir === 'up') sy = y + 1;
+      else if (dir === 'down') sy = y - 1;
+      if (sx >= 0 && sx < TILE && sy >= 0 && sy < TILE)
+        px[y * TILE + x] = copy[sy * TILE + sx];
+    }
+  renderCanvas(); renderIconList();
+}
+
+function floodFill(startX, startY, newVal) {
+  const px = icons[currentIdx].pixels;
+  const oldVal = px[startY * TILE + startX];
+  if (oldVal === newVal) return;
+  const stack = [[startX, startY]];
+  const visited = new Set();
+  while (stack.length > 0) {
+    const [cx, cy] = stack.pop();
+    if (cx < 0 || cx >= TILE || cy < 0 || cy >= TILE) continue;
+    const key = cy * TILE + cx;
+    if (visited.has(key)) continue;
+    if (px[key] !== oldVal) continue;
+    visited.add(key);
+    px[key] = newVal;
+    stack.push([cx+1, cy], [cx-1, cy], [cx, cy+1], [cx, cy-1]);
+  }
+}
+
+function getLinePoints(x0, y0, x1, y1) {
+  const pts = [];
+  const dx = Math.abs(x1 - x0), dy = Math.abs(y1 - y0);
+  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+  let err = dx - dy;
+  while (true) {
+    pts.push([x0, y0]);
+    if (x0 === x1 && y0 === y1) break;
+    const e2 = 2 * err;
+    if (e2 > -dy) { err -= dy; x0 += sx; }
+    if (e2 < dx) { err += dx; y0 += sy; }
+  }
+  return pts;
+}
+
+function bresenhamLine(x0, y0, x1, y1, val) {
+  for (const [px, py] of getLinePoints(x0, y0, x1, y1)) {
+    setPixel(px, py, val);
+  }
+}
+
+// ============================================================
+// Keyboard shortcuts
+// ============================================================
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT') return;
+  if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
+    e.preventDefault();
+    if (e.shiftKey) redo(); else undo();
+    return;
+  }
+  if (e.key === 'p') setTool('pen');
+  if (e.key === 'e') setTool('eraser');
+  if (e.key === 'f') setTool('fill');
+  if (e.key === 'l') setTool('line');
+});
+
+// ============================================================
+// Import
+// ============================================================
+function importIconsheet() {
+  document.getElementById('importJsonFile').value = '';
+  document.getElementById('importPngFile').value = '';
+  document.getElementById('importInvert').checked = true;
+  document.getElementById('importModal').classList.add('show');
+}
+
+function hideImportModal() {
+  document.getElementById('importModal').classList.remove('show');
+}
+
+function doImport() {
+  const jsonFile = document.getElementById('importJsonFile').files[0];
+  const pngFile = document.getElementById('importPngFile').files[0];
+  const invertColors = document.getElementById('importInvert').checked;
+
+  if (!jsonFile || !pngFile) {
+    alert('Please select both a JSON and PNG file.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const manifest = JSON.parse(e.target.result);
+      const tileSize = manifest.tileSize || 32;
+      const spacing = manifest.spacing || 1;
+      const threshold = manifest.threshold || 128;
+      const iconDefs = manifest.icons || [];
+
+      const img = new Image();
+      const url = URL.createObjectURL(pngFile);
+      img.onload = () => {
+        const tmpCanvas = document.createElement('canvas');
+        tmpCanvas.width = img.width;
+        tmpCanvas.height = img.height;
+        const tmpCtx = tmpCanvas.getContext('2d');
+        tmpCtx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+
+        icons = [];
+        for (const def of iconDefs) {
+          const step = tileSize + spacing;
+          const sx = (def.col || 0) * step;
+          const sy = (def.row || 0) * step;
+          const imgData = tmpCtx.getImageData(sx, sy, tileSize, tileSize);
+          const pixels = new Uint8Array(TILE * TILE);
+
+          for (let y = 0; y < TILE; y++) {
+            for (let x = 0; x < TILE; x++) {
+              const srcX = Math.floor(x * tileSize / TILE);
+              const srcY = Math.floor(y * tileSize / TILE);
+              const idx = (srcY * tileSize + srcX) * 4;
+              const r = imgData.data[idx];
+              const g = imgData.data[idx + 1];
+              const b = imgData.data[idx + 2];
+              const gray = 0.299 * r + 0.587 * g + 0.114 * b;
+              let on = gray > threshold ? 1 : 0;
+              if (invertColors) on = on ? 0 : 1;
+              pixels[y * TILE + x] = on;
+            }
+          }
+          icons.push({ name: def.name, pixels });
+        }
+
+        currentIdx = icons.length > 0 ? 0 : -1;
+        history = []; redoStack = [];
+        hideImportModal();
+        renderCanvas();
+        renderIconList();
+        showToast('Imported ' + icons.length + ' icons');
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        alert('Failed to load PNG file.');
+      };
+      img.src = url;
+    } catch (err) {
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(jsonFile);
+}
+
+// ============================================================
+// Export: iconsheet.json
+// ============================================================
+function exportJson() {
+  if (icons.length === 0) { alert('No icons to export.'); return; }
+
+  const iconDefs = icons.map((icon, i) => ({
+    name: icon.name,
+    row: Math.floor(i / ICONS_PER_ROW),
+    col: i % ICONS_PER_ROW
+  }));
+
+  const manifest = {
+    tileSize: 32,
+    spacing: 1,
+    threshold: 128,
+    sheet: "assets/iconsheet.png",
+    icons: iconDefs
+  };
+
+  downloadFile('iconsheet.json', JSON.stringify(manifest, null, 2), 'application/json');
+  showToast('Downloaded iconsheet.json');
+}
+
+// ============================================================
+// Export: iconsheet.png
+// ============================================================
+function exportIconsheetPng() {
+  if (icons.length === 0) { alert('No icons to export.'); return; }
+
+  const rows = Math.ceil(icons.length / ICONS_PER_ROW);
+  const step = TILE + 1;
+  const w = ICONS_PER_ROW * step + 1;
+  const h = rows * step + 1;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+
+  // Gray grid background
+  ctx.fillStyle = '#c8c8c8';
+  ctx.fillRect(0, 0, w, h);
+
+  // Draw each icon tile
+  icons.forEach((icon, i) => {
+    const col = i % ICONS_PER_ROW;
+    const row = Math.floor(i / ICONS_PER_ROW);
+    const ox = col * step + 1;
+    const oy = row * step + 1;
+
+    // White background for tile
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(ox, oy, TILE, TILE);
+
+    // Draw icon pixels as black shapes on white background
+    // This matches the original iconsheet.png convention used by create_icons.py
+    // generate_icons.py: pixel > 128 -> bit ON -> lit on OLED
+    // So: white (255) in PNG -> bit ON, black (0) in PNG -> bit OFF
+    // Our "drawn" pixels represent what should be ON on OLED
+    // So drawn pixels should be WHITE in the PNG (value 255 > 128 -> bit ON)
+    for (let y = 0; y < TILE; y++) {
+      for (let x = 0; x < TILE; x++) {
+        if (!icon.pixels[y * TILE + x]) {
+          // Undrawn pixel -> black in PNG -> value 0 -> bit OFF on OLED
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(ox + x, oy + y, 1, 1);
+        }
+        // Drawn pixel -> stays white from fillRect above -> value 255 -> bit ON
+      }
+    }
+  });
+
+  // Fill remaining empty tiles with black
+  for (let i = icons.length; i < rows * ICONS_PER_ROW; i++) {
+    const col = i % ICONS_PER_ROW;
+    const row = Math.floor(i / ICONS_PER_ROW);
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(col * step + 1, row * step + 1, TILE, TILE);
+  }
+
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'iconsheet.png';
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('Downloaded iconsheet.png');
+  }, 'image/png');
+}
+
+// ============================================================
+// Export: icons_embedded.cpp
+// ============================================================
+async function exportCpp() {
+  if (icons.length === 0) { alert('No icons to export.'); return; }
+
+  showToast('Generating C++ file...');
+
+  const iconData = [];
+  for (let i = 0; i < icons.length; i++) {
+    const icon = icons[i];
+
+    // Generate PNG bytes from a canvas
+    const pngBytes = await getIconPngBytes(icon);
+
+    // Generate 1bpp bitmap matching Python _bitmap_1bpp_32x32
+    // LSB = leftmost pixel in each group of 8
+    const bmp = new Uint8Array(128);
+    for (let y = 0; y < 32; y++) {
+      for (let x0 = 0; x0 < 32; x0 += 8) {
+        let b = 0;
+        for (let bit = 0; bit < 8; bit++) {
+          const x = x0 + bit;
+          if (icon.pixels[y * TILE + x]) {
+            b |= (1 << bit);
+          }
+        }
+        bmp[y * 4 + (x0 >> 3)] = b;
+      }
+    }
+
+    iconData.push({ name: icon.name, png: pngBytes, bmp });
+  }
+
+  // Build C++ source - matches generate_icons.py output exactly
+  const lines = [];
+  lines.push('#include "icons_embedded.h"');
+  lines.push('');
+  lines.push('// Auto-generated icon arrays');
+  lines.push('// DO NOT EDIT - regenerate with HardwareOne Icon Generator');
+  lines.push('');
+
+  for (const icon of iconData) {
+    lines.push('// ' + icon.name + ' PNG data (' + icon.png.length + ' bytes)');
+    lines.push('static const uint8_t PROGMEM icon_' + icon.name + '_png[] = {');
+    for (let i = 0; i < icon.png.length; i += 16) {
+      const chunk = Array.from(icon.png.slice(i, i + 16));
+      lines.push('  ' + chunk.map(b => '0x' + b.toString(16).toUpperCase().padStart(2, '0')).join(', ') + ',');
+    }
+    lines.push('};');
+    lines.push('');
+
+    lines.push('// ' + icon.name + ' monochrome bitmap (32x32 = 128 bytes)');
+    lines.push('static const uint8_t PROGMEM icon_' + icon.name + '_bitmap[] = {');
+    for (let i = 0; i < 128; i += 8) {
+      const chunk = Array.from(icon.bmp.slice(i, i + 8));
+      lines.push('  ' + chunk.map(b => '0x' + b.toString(16).toUpperCase().padStart(2, '0')).join(', ') + ',');
+    }
+    lines.push('};');
+    lines.push('');
+  }
+
+  // Registry
+  lines.push('// Icon registry');
+  lines.push('const EmbeddedIcon EMBEDDED_ICONS[] PROGMEM = {');
+  for (const icon of iconData) {
+    lines.push('  {"' + icon.name + '", icon_' + icon.name + '_png, ' + icon.png.length + ', icon_' + icon.name + '_bitmap, 32, 32},');
+  }
+  lines.push('};');
+  lines.push('');
+  lines.push('const size_t EMBEDDED_ICONS_COUNT = ' + iconData.length + ';');
+  lines.push('');
+
+  // Lookup function
+  lines.push('const EmbeddedIcon* findEmbeddedIcon(const char* name) {');
+  lines.push('  for (size_t i = 0; i < EMBEDDED_ICONS_COUNT; i++) {');
+  lines.push('    char iconName[32];');
+  lines.push('    strcpy_P(iconName, (PGM_P)pgm_read_ptr(&EMBEDDED_ICONS[i].name));');
+  lines.push('    if (strcmp(iconName, name) == 0) {');
+  lines.push('      return &EMBEDDED_ICONS[i];');
+  lines.push('    }');
+  lines.push('  }');
+  lines.push('  return nullptr;');
+  lines.push('}');
+  lines.push('');
+
+  downloadFile('icons_embedded.cpp', lines.join('\n'), 'text/plain');
+  showToast('Downloaded icons_embedded.cpp (' + iconData.length + ' icons)');
+}
+
+function getIconPngBytes(icon) {
+  return new Promise(resolve => {
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+
+    // Match the PNG convention: drawn pixels = white, undrawn = black
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, 32, 32);
+
+    const imgData = ctx.createImageData(32, 32);
+    for (let y = 0; y < TILE; y++)
+      for (let x = 0; x < TILE; x++)
+        if (icon.pixels[y * TILE + x]) {
+          const i = (y * 32 + x) * 4;
+          imgData.data[i] = imgData.data[i+1] = imgData.data[i+2] = 255;
+          imgData.data[i+3] = 255;
+        } else {
+          const i = (y * 32 + x) * 4;
+          imgData.data[i+3] = 255;
+        }
+    ctx.putImageData(imgData, 0, 0);
+
+    c.toBlob(blob => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(new Uint8Array(reader.result));
+      reader.readAsArrayBuffer(blob);
+    }, 'image/png');
+  });
+}
+
+// ============================================================
+// Utility
+// ============================================================
+function downloadFile(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// Theme
+// ============================================================
+function toggleTheme() {
+  const html = document.documentElement;
+  const current = html.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  try { localStorage.setItem('hw_icon_tool_theme', next); } catch (_) {}
+  updateThemeIcon();
+}
+
+function updateThemeIcon() {
+  const btn = document.getElementById('themeToggleBtn');
+  const theme = document.documentElement.getAttribute('data-theme');
+  btn.textContent = theme === 'dark' ? '\u2600\uFE0F' : '\uD83C\uDF19';
+}
+
+// ============================================================
+// Standard Icons (87 icons from icons_embedded.cpp)
+// ============================================================
+const STANDARD_ICONS_HEX = {"smiley":"0000000000000000000000000000000000E0070000FC3F00001E78000007E00080018001C0000003E00000076000000660183006303C780C303C780C3018300C3000000C3000000C3000000C6000000660000006E00C2007C01830038031980100E7EF0000DE7F0000FC3F0000E0070000000000000000000000000000000000","frowny":"0000000000000000000000000000000000E0070000FC3F00001E78000007E00080018001C0000003E00000076000000660183006303C780C303C780C3018300C3000000C3000000C30C0070C60E00F0660301806E0183007C00C2003800180010007E000001E780000FC3F0000E0070000000000000000000000000000000000","folder":"000000000000000000000000000000000000000000000000000000000000000000E0FF0F00F0FF0F00300000E0FFFF0FE0FFFF0F6000000C6000000C6000000C6000000C6000000C6000000C6000000C6000000C6000000C6000000C6000000CE0FFFF0FE0FFFF0F000000000000000000000000000000000000000000000000","file":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030003FC01000380010003800100038001000380010003800100038001000380010003800100038001000380010003800100FFFF0100FFFF010000000000000000000000000000000000000000","wifi_0":"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100008003000000010000000000000000000000000000000000000000000000000000000000","wifi_1":"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000C0070000E00F0000701C0000383800000000000000000000000100008003000000010000000000000000000000000000000000000000000000000000000000","wifi_2":"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000C0070000F01F000038380000CC670000E6CF000076DC0000383800000000000000000000000100008003000000010000000000000000000000000000000000000000000000000000000000","wifi_3":"0000000000000000000000000000000000000000000000000000000000000000000000000000000000E00F0000F83F00001C700000C7C70100F39F0180393803C0CC6706C0E6CF060076DC0000383800000000000000000000000100008003000000010000000000000000000000000000000000000000000000000000000000","arrow_left":"0000000000000000000000000000000000000000000000000000000000000000000000000000000000200000007000000038000000180000001C000000FEFF0000FEFF00000E0000001C000000180000003800000070000000200000000000000000000000000000000000000000000000000000000000000000000000000000","arrow_right":"0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000380000007000000060000000E00000FEFF0100FEFF000000600000007000000038000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000","arrow_up":"0000000000000000000000000000000000000000000000000000000000000000000000000080030000C0070000E00F0000B83900009C7100008821000080010000800100008001000080010000800100008001000080010000800100008001000000000000000000000000000000000000000000000000000000000000000000","arrow_down":"000000000000000000000000000000000000000000000000000000000000000000000000000003000000030000000300000003000000030000000300000003000000030000000300000003000010130000383B0000701F0000C00700008003000000010000000000000000000000000000000000000000000000000000000000","chevron_left":"0000000000000000000000000000000000000000000000000000000000000003000080070000880700001C0300003F0000801F0000C0070000F0030000F801000070000300F8810700F0830700C0070300801F0000003F0000001C00000008000000000000000003000080070000800700000003000000000000000000000000","chevron_right":"000000000000000000000000000000000000000000000000000000000000000000000000002000000070000000F8010000F0030000C0070000801F0000003F0000001C0000003F0000801F0000C0070000F0030000F8010000700000002000000000000000000000000000000000000000000000000000000000000000000000","battery_0":"00000000000000000000000000000000000000000000000000000000000000000000000000000000C0FFFF03C0FFFF03C0000003C000001FC000001FC000001FC000001FC000001FC000001FC000001FC0000003C0FFFF03C0FFFF03000000000000000000000000000000000000000000000000000000000000000000000000","battery_25":"00000000000000000000000000000000000000000000000000000000000000000000000000000000C0FFFF03C0FFFF03C00F0003C00F001FC00F001FC00F001FC00F001FC00F001FC00F001FC00F001FC00F0003C0FFFF03C0FFFF03000000000000000000000000000000000000000000000000000000000000000000000000","battery_50":"00000000000000000000000000000000000000000000000000000000000000000000000000000000C0FFFF03C0FFFF03C0FF0003C0FF001FC0FF001FC0FF001FC0FF001FC0FF001FC0FF001FC0FF001FC0FF0003C0FFFF03C0FFFF03000000000000000000000000000000000000000000000000000000000000000000000000","battery_75":"00000000000000000000000000000000000000000000000000000000000000000000000000000000C0FFFF03C0FFFF03C0FF0F03C0FF0F1FC0FF0F1FC0FF0F1FC0FF0F1FC0FF0F1FC0FF0F1FC0FF0F1FC0FF0F03C0FFFF03C0FFFF03000000000000000000000000000000000000000000000000000000000000000000000000","battery_100":"00000000000000000000000000000000000000000000000000000000000000000000000000000000C0FFFF03C0FFFF03C0FFFF03C0FFFF1FC0FFFF1FC0FFFF1FC0FFFF1FC0FFFF1FC0FFFF1FC0FFFF1FC0FFFF03C0FFFF03C0FFFF03000000000000000000000000000000000000000000000000000000000000000000000000","battery_charging":"00000000000000000000000000000000000000000000000000000000000000000000000000000000C0FFFF03C0FFFF03C0FF0103C0FF011FC0FF011FC0FF1F1FC0FF081FC0FF0B1FC0FF051FC0FF031FC0FF0103C0FFFF03C0FFFF03004000000000000000000000000000000000000000000000000000000000000000000000","plus":"00000000000000000000000000000000000000000000000000000000000000000000000000000000008003000080030000800300008003000080030000FC7F0000FC7F0000FC7F000080030000800300008003000080030000800300000000000000000000000000000000000000000000000000000000000000000000000000","minus":"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000FC7F0000FC7F0000FC7F000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","check":"00000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000E0000000F0010000F80000007C0000003C0000081E00001C0F0000BE0F0000FC070000F8030000F0010000A00000000000000000000000000000000000000000000000000000000000000000000000000000","close":"000000000000000000000000000000000000000000000000000000000000000000000000000000000010100000383800007C7C0000F83E0000F01F0000E00F0000C0070000E00F0000F01F0000F83E00007C7C000038380000101000000000000000000000000000000000000000000000000000000000000000000000000000","menu":"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000FEFF0000FEFF0000FEFF000000000000FEFF0000FEFF0000FEFF000000000000FEFF0000FEFF0000FEFF0000000000000000000000000000000000000000000000000000000000000000000000000000000000","search":"00000000000000000000000000000000000000000000000000000000000000000000000000E0010000F80700001C0E00000C0C0000061800000618000006180000061800000C0C00001C1E0000F83F0000E07D000000F8000000F0010000E0030000C00100008000000000000000000000000000000000000000000000000000","info":"00000000000000000000000000000000000000000000000000E00F0000F83F00003C7800000EE000000380018003810380810303C0010107C0000006C0800306C0800306C0800306C0800306C0810307808103038083830300838301000EE000003C780000F83F0000E00F000000000000000000000000000000000000000000","warning":"00000000000000000000000000000000000000000000000000000000000001000080020000800200004004000040040000A00B0000A00B000090130000901300008823000084430000844300008283000002800000010101008103018000010280000002C0FFFF07000000000000000000000000000000000000000000000000","settings":"00000000000000000000000000000000000000000000000000000000008003000080030000882300009C730000FEFF0000FC7F0000783C0000383800801FF003801FF003801FF0030038380000783C0000FC7F0000FEFF00009C7300008823000080030000800300000000000000000000000000000000000000000000000000","refresh":"0000000000000000000000000000000000000000000000000000000100C0070100F09F03003CF803000EE0070006000000030000000300008001000080010000800100008001000080010000000300000003000000064000000EE000003C780000F01F0000C00700000000000000000000000000000000000000000000000000","wifi_off":"000000000000000000000000000000000000000000000000000000000000000000040000000E0000001F0000003E0000007C000000F8070000F01F0000F83B0000CC670000E6CF000076DF0000383E0000007C000000F8000000F1010080E3000000410000000000000000000000000000000000000000000000000000000000","sdcard":"00000000000000000000000000000000000000000000000000FC7F0000048000000400010004000100B40D0200B40D0400B40D0400B40D0400B40D04000400040004000400040004000400040004000400040004000400040004000400040004000400040004000400FCFF070000000000000000000000000000000000000000","trash":"000000000000000000000000000000000000000000000000000000000000000000F03F0000F03F000030300000FEFF0000FEFF0000183000005835000058350000583500005835000058350000583500005835000058350000583500005835000018300000F83F0000F83F000000000000000000000000000000000000000000","upload":"000000000000000000000000000000000000000000000000000000000000000000000000000000000080030000C0070000E00F0000F01D0000B839000090110000800100008001000080010000FEFF0000FEFF000086C1000086C1000006C00000FEFF0000FEFF00000000000000000000000000000000000000000000000000","download":"00000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000030000000300000003000000030000000300000003000000030000200B0000FEFF0000FEFF0000C6C7000086C3000006C10000FEFF0000FEFF00000000000000000000000000000000000000000000000000","edit":"00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000003800000078000000E4000000E201000091000080080000400400002002000010010000880000004400000028000000100000007C0000007C00000000000000000000000000000000000000000000","save":"000000000000000000000000000000000000000000000000000000000000000000FEFF0000FEFF0000F6DF000036D80000F6DF0000F6DF000006C0000006C0000006C0000006C00000F6DF0000F6DF000036D8000036D8000036D8000036D80000F6DF0000FEFF0000FEFF000000000000000000000000000000000000000000","home":"000000000000000000000000000000000000000000000000000000000000000000000000000001000080020000400400002008000010100000082000000440000002800000FFFF0100F83F00001830000018300000D8370000D8370000D8360000D8360000F83F0000F83F000000000000000000000000000000000000000000","back":"000000000000000000000000000000000000000000000000000000000000000000000000000000000040C00000E0C00000F0C10000F0C0000078C00000FCFF0000F8FF0000FCFF000078C00000F0C00000F0C10000E0C0000040C000000000000000000000000000000000000000000000000000000000000000000000000000","lock":"00000000000000000000000000000000000000000000000000000000000000000080030000C0070000600C00003018000000000000000000000000000000000000F83F0000F83F000018300000183000001831000098330000183100001830000018300000F83F0000F83F000000000000000000000000000000000000000000","unlock":"000000000000000000000000000000000000000000000000000000000000000000E0000000F0010000180300000C060000003C0000003C00000000000000000000F83F0000F83F000018300000183000001831000098330000183100001830000018300000F83F0000F83F000000000000000000000000000000000000000000","file_text":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030003FC010003800100FBBF0100FBBF01000380010003800100FBBF0100FBBF01000380010003800100FB870100FB870100FFFF0100FFFF010000000000000000000000000000000000000000","file_code":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010013FC03003BFC0100739C0100E38E010043840100E38E0100739C01003BB801001390010003800100038001000380010003800100FFFF0100FFFF010000000000000000000000000000000000000000","file_image":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030003FC0100FBBF0100FBBF01001BB801001BBC01001BB801001BB801009BB801005BB501003BB20100FBBF0100FBBF0100FFFF0100FFFF010000000000000000000000000000000000000000","file_zip":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030003FF01000383010003830100838301000383010003830100038301008383010003830100038301000383010083830100FFFF0100FFFF010000000000000000000000000000000000000000","file_json":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030023FC0100739001003BB8010013F001003BB8010073900100238301000383010003830100038301000383010003800100FFFF0100FFFF010000000000000000000000000000000000000000","file_pdf":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030003FC01000380010003800100FB870100FB8701001B860100FB870100FB8301001B8001001B8001001B80010003800100FFFF0100FFFF010000000000000000000000000000000000000000","file_bin":"00000000000000000000000000000000000000000000000000FFFF0100FFFF010003BC010003FC010003EC010003CC010003FC030003FC01000380010003800100FBBF0100FBBF01000380010003800100FBBF0100FBBF01000380010003800100FBBF0100FFFF0100FFFF010000000000000000000000000000000000000000","sun":"00000000000000000000030000000300000003000000030080000301C0018303800300070007000E00C2070400E00F000030180000183000000C6000000C6000FC0C607EFC0C607E000C6000001830000030180000E00F0000C0070080000001C0018003800303070007030E0002030400000300000003000000030000000000","moon":"0000000000000000000000000000000000E0070000F81F0000FE3800001F60008007C000C003C000C0018001E0008001E000800170008001700080017000C0007000C000700000007000000070000000E0000000E0000000C0010007C00380078007C003001FF00100FEFF0000F83F0000E00F00000000000000000000000000","notify_bell":"00000000000000000000000000000000000000000000000000C0070000F01F00003C7800000EE0000006C0000003800100038001000380010003800100038001000380010003800100038001000380010003800100038001E0FFFF0FE0FFFF0F0000000000600C0000600C0000C0070000800300000000000000000000000000","notify_espnow":"0000000000000000000000000000000000000000000000000000000000000000000000000010100000C8270000E44F0000329800001AB000008D630100CD670100CD670100CD6701008D6301001AB0000032980000E44F0000C82700001010000000000000000000000000000000000000000000000000000000000000000000","notify_automation":"00000000000000000000000000000000001FFF3F803FFF3FC060003060C00030308001303080013030800130308001303080013060C00030C0600030903F0030381FF0317000F803E0000C06C001060C8003031800070318000E0318001C0318003803180070060C00E00C0600C0F903F0FFF101F0FF01000000000000000000","notify_server":"0000000000000000000000000000000000000000F0FFFF1FF0FFFF1F3000001830000018300000183000001830000018F0FFFF1FF0FFFF1FF0FFFF1FF0FFFF1F3000001830000018300000183000001830000018F0FFFF1FF0FFFF1FF0FFFF1FF0FFFF1F3000001830000018300000183000001830000018F0FFFF1FF0FFFF1F","notify_sensor":"00000000000000000000000000000300000003000000030000E00F0000F83F00003C7B00000EE00000C0070000E00F00003018000080030000C0070000E00F0000E00F0000E00F0000C00700008003000030180000E00F0000C00700000EE000003C7B0000F83F0000E00F000000030000000300000003000000000000000000","notify_logging":"00000000000000000000000000000000E0FF7F00E0FF7F006000600060006000600060006000600060FE670060FE670060006000600060006000600060FE670060FE670060006000600060006000600060FE670060FE67006000600060006000600060006000600060006000E0FF7F00E0FF7F00000000000000000000000000","notify_files":"000000000000000000000000000000000000000000F8FF0000FCFF00000CC000E0FFFF00E0FF7F0060006000600060006000600060FE670060FE670060006000600060006000600060FE670060FE670060006000600060006000600060FE670060FE670060006000E0FF7F00E0FF7F0000000000000000000000000000000000","notify_system":"0000000000000000000000000000000000000300000003000000030000000300000283000007C00100CE870300E40F010030180000183000008C630000CC6700F0CD671FF0CD671F008C6300001830000030180000E00F0000C287000007C001000E830300040301000003000000030000000300000000000000000000000000","notify_cli":"0000000000000000000000000000000000000000F8FFFF3FF8FFFF3F1800003018000030180000301800003018000030180100309803003018070030181C003018380030181C0030180700309803003018817F3018807F3018000030180000301800003018000030F8FFFF3FF8FFFF3F00000000000000000000000000000000","device":"00000000000000000000000000FFFF0100FFFF01000380010003800100E38F0100E38F010003800100038001000380010003800100038001000380010003800100038001000380010003800100038001000380010003800100038001000380010083830100C3870100C3870100C3870100FFFF0100FFFF010000000000000000","compass":"0000000000000000000000000000000000E00F0000F83F00001EF0000007C00180038103C0010107C08003066080030C6080030C30C0071830C0071830E00F1830600C1830A00B1830400418304004186080040C6080020CC0800206C0010107800381030007C001001EF00000F83F0000E00F00000000000000000000000000","imu_axes":"0000000000000000000000000000000000000000000000000000000000000100008003000080070000C0070000E00D0000C01D000080090000800100008001000080010000800100008081000080C101008081070080010EE0FFFF1FE0FFFF0F80F98103809E0101C0870100C0830100E0800100000000000000000000000000","thermal":"000000000000000000000000000000000000000000E00F0000E00F0000E00F0000E00F0000E00F0000E00F0000E00F0000E00F00008003000080030000800300008003000080030000C0070000F01F0000F83F0000F83F0000EC6F0000EC6F0000CC6700009833000038380000F01F0000C00700000000000000000000000000","tof_radar":"000000000000000000E00F0000FC7F00001EF30080038303C0E10F07E0F83F0E603C7B0C300EE01800C3870180E38F01003018000098330000C0070000E00F0000E00F0000E00F0000C0070000800300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","bt_off":"000000000000000000000000000001000080030040000700E0000F00C0011F0080033B0000077300000E2300001C730000383B0000701F0000E00F0000C007000080030000C0070000E00F0000701F0000383B00001C7300000EE3000004F3010000BB0300001F0700000F0E0000071C00800308000001000000000000000000","bt_idle":"00000000000000000000000000000100008003000000070000000F0000001F0000003B0000047300000E2300001C730000383B0000701F0000E00F0000C007000080030000C0070000E00F0000701F0000383B00001C7300000E23000004730000003B0000001F0000000F000000070000800300000001000000000000000000","bt_advertising":"00000000000000000000000000000100008003000000070000000F0000001F0000003B0000047300000EA300001CF30000383B0100701F0100E02F0200C027020080230200C0270200E02F0200701F0100383B01001CF300000EA3000004730000003B0000001F0000000F000000070000800300000001000000000000000000","bt_connected":"00000000000000000000000000000100008003000000070000000F0000001F0000003B0000047300000E2300001C730000383B0000701F0000E00F0000C007000080030000C0070000E00F0000701F0000383B07001CF30F000EE31F0004F31F0000FB1F00009F0F00000F070000070000800300000001000000000000000000","speaker":"000000000000000000000000000000000000000000000000000000000000040000000600008005000040040000200404E01F040C2000040C20000418200004382000043820000438200004182000040CE01F040C0020040400C00400000005000000060000000400000000000000000000000000000000000000000000000000","smartphone":"00000000000000000000000000FEFF0000FEFF000006C00000C6C70000C6C7000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000006C0000086C30000C6C70000C6C70000FEFF0000FEFF000000000000000000","smart_glasses":"000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800FE003C01FF007E238380E77701C5C3C600CF838E00F3830E00F1870701C1CE038380EC01FF007800FE003000000000000000000000000000000000000000000000000000000000000000000000000","laptop":"00000000000000000000000000000000000000000000000000000000F0FFFF1FF0FFFF1F300000183000001830000018300000183000001830000018300000183000001830000018300000183000001830000018F0FFFF1FF0FFFF1FFEFFFFFFFEFFFFFF1C000070F8FFFF3FF0FFFF1F00000000000000000000000000000000","headphones":"000000000000000000000000000000000000000000E00F0000FC7F00001FF00180038003C0010007C00000066000000C6000000C000000000000000000000000F007C01FF007C01F3006C0183006C0183006C0183006C0183006C018F007C01FF007C01F00000000000000000000000000000000000000000000000000000000","watch":"0000000000000000000000000000000000E01F0000E01F00000018000000180000C0070000F01F0000383800000C60000006C3000006C300000383010003830100039F0100039F01000380010006C0000006C000000C60000038380000F01F0000C0070000000C0000000C0000000C0000E00F0000E00F000000000000000000","gamepad":"00000000000000000000000000000000000000000000000000000000000000000000000000000000F0FFFF1FF0FFFF1F30000018300C3018300C7818300C7818B03FB019B03FC01B300CC01B300C801930000018F0FFFF1FF0FFFF1F000000000000000000000000000000000000000000000000000000000000000000000000","power":"0000000000000000000000000000000000800300008003000080030000C0070000F01F0000FC7F0000BEFB00008EE3000087C3010087C30180838303808383038083830380038003800380030007C0010007C001000EE0000006C000000000000000000000000000000000000000000000000000000000000000000000000000","memory":"000000000000000000000000000000000000000000C6180300C6180300C61803F0FFFF1FF0FFFF1F30000018300000183000001830000018300000183000001830000018300000183000001830000018300000183000001830000018F0FFFF1FF0FFFF1F00C6180300C6180300C6180300000000000000000000000000000000","terminal":"0000000000000000000000000000000000000000F8FFFF3FF8FFFF3F1800003018000030180000301800003018000030180100309803003018070030181C003018380030181C003018070030980300301881FF301880FF3018000030180000301800003018000030F8FFFF3FF8FFFF3F00000000000000000000000000000000","user":"000000000000000000000000000000000000000000C0070000E00F0000701C00003838000018300000183000001830000038380000701C0000E00F0000FC7F00001EF00080038003C0010007C00000066000000C6000000C6000000C000000000000000000000000000000000000000000000000000000000000000000000000","led":"00000000000000000000000000000000000000000000000000C0070000E00F080030180E0018B003000CE000000C6000000C6000000C601F000C601F001830000030180000E08F0000E08F0300600C0E00600C0800600C0000600C0000600C0000E00F0000E00F0000F83F0000F83F0000000000000000000000000000000000","radio":"000000000000000000000000000000000000E0030000F0070000380E00001C1C00000C0000000C000000060000000600F8FFFF3FF8FFFF3F1800003018000030180E0030983F00309831FC37D860FC37D8600030D86000309831FC30983FFC30180E00301800003018000030F8FFFF3FF8FFFF3F000000000000000000000000","gesture":"000000000000000000000000000000000080030000800300008003000080030000800300009C7300009C7300009C7300009C7300009C7300009C7300009C7300009C7300009C7300009C730000000000000000000000000000038001000380010007C001000EE000003C780000F83F0000E00F00000000000000000000000000","clock":"0000000000000000000000000000000000E0070000FC3F00001E78000007E00080018001C0000303E000030760000306600003063000030C3080030C30C0070C30C07F0C30C07F0C3080030C6000000660000006E0000007C0000003800180010007E000001E780000FC3F0000E0070000000000000000000000000000000000","bond":"00000000000000000000000000000000000000000000000000000000000000000000000000000000800FE003C01FF007E038380E70701C1C30600C1830E00F1830E00F1870701C1CE038380EC01FF007800FE0030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","bond_off":"000000000000000000000000000000002000000070000000E0000000C00100008003000000070000800FE003C01FF007E038380E70701C1C30E00C1830E00F1830E00F1870701F1CE0383E0EC01FFC07800FF803000070000000E0000000C00100008003000000070000000E0000001C00000038000000100000000000000000","bond_sync":"0000000000000000000000000000200000C0770000E0EF00003058000010F0000000700000002000800FE003C01FF007E038380E70701C1C30600C1830E00F1830E00F1870701C1CE038380EC01FF007800FE0030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000","bond_search":"0000000000000000000000000000E0000000F8030000180300000C0600000C0600000C0600001803800FF807C01FF00FE038381E70701C3C30600C1830E00F1830E00F1870701C1CE038380EC01FF007800FE0030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"};
+
+function decodeBitmapHex(hexStr) {
+  const pixels = new Uint8Array(1024);
+  for (let i = 0; i < 128; i++) {
+    const byte = parseInt(hexStr.substr(i * 2, 2), 16);
+    for (let bit = 0; bit < 8; bit++) {
+      pixels[i * 8 + bit] = ((byte >> bit) & 1) ? 0 : 1;
+    }
+  }
+  return pixels;
+}
+
+function loadStandardIcons() {
+  if (icons.length > 0 && !confirm('This will replace all current icons with the 87 standard HardwareOne icons. Continue?')) return;
+  icons.length = 0;
+  for (const [name, hex] of Object.entries(STANDARD_ICONS_HEX)) {
+    icons.push({ name, pixels: decodeBitmapHex(hex) });
+  }
+  currentIdx = 0;
+  historyStacks = icons.map(() => []);
+  redoStacks = icons.map(() => []);
+  renderCanvas();
+  renderIconList();
+  showToast('Loaded ' + icons.length + ' standard icons');
+}
+
+// ============================================================
+// Init
+// ============================================================
+renderCanvas();
+renderIconList();
+updateThemeIcon();
+</script>
+</body>
+</html>

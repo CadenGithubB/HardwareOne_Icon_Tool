@@ -85,6 +85,11 @@
     {"name": "user", "row": 5, "col": 12},
     {"name": "led", "row": 5, "col": 13},
     {"name": "radio", "row": 5, "col": 14},
-    {"name": "gesture", "row": 6, "col": 0}
+    {"name": "gesture", "row": 6, "col": 0},
+    {"name": "clock", "row": 6, "col": 1},
+    {"name": "bond", "row": 6, "col": 2},
+    {"name": "bond_off", "row": 6, "col": 3},
+    {"name": "bond_sync", "row": 6, "col": 4},
+    {"name": "bond_search", "row": 6, "col": 5}
   ]
 }
