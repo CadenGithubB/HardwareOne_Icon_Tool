@@ -23,19 +23,38 @@ Draw, edit, and export icons entirely in your browser — no dependencies requir
 These scripts still work if you prefer a local workflow.
 
 ### 1. Create or Edit the Iconsheet
-> No iconsheet? Run `python3 scripts/icon_template_generator.py` first.
 
-**Edit `assets/iconsheet.png`** - Draw within the 32x32 tiles (don't edit the 1px spacing lines)
-- **Optional**: Run `python3 scripts/create_icons.py` for basic example icons
+**Option A — Regenerate from code:**
+```
+python3 scripts/draw_iconsheet_png.py
+```
+Programmatically draws all 87 standard icons to `assets/iconsheet.png`.
+
+**Option B — Start from a blank template:**
+```
+python3 scripts/create_blank_iconsheet_png.py
+```
+Creates a blank 512×512 grid PNG for drawing icons manually in an image editor.
+
+**Option C — Generate basic example icons:**
+```
+python3 scripts/draw_example_icons_to_assets.py
+```
+Outputs a small set of simple example icons as individual PNGs into `assets/`.
 
 ### 2. Update the Icon Registry
-> No iconsheet.json? Run `python3 scripts/generate_iconsheet_json.py` first.
+> No `iconsheet.json`? Run `python3 scripts/create_iconsheet_json.py` first.
 
-**Add/update entries in `iconsheet.json`** - Format: `{"name": "icon_name", "row": X, "col": Y}`
+**Edit `iconsheet.json`** — Format: `{"name": "icon_name", "row": X, "col": Y}`
 
-### 3. Export Icons
-**Run `python3 scripts/generate_icons.py`**
-- Reads `iconsheet.json` + `assets/iconsheet.png` -> generates `icons_embedded.cpp`
-- **Warning:** This completely regenerates the file and erases previous content
+### 3. Export to Firmware
+```
+python3 scripts/export_icons_embedded_cpp.py
+```
+Reads `iconsheet.json` + `assets/iconsheet.png` → generates `icons_embedded.cpp` in the firmware repo root.
+> **Warning:** Completely regenerates the file and erases previous content.
 
-### Great Success. You now have 32x32 icons for your project in a format that requires no heap allocation.
+### Utilities
+- **`extract_individual_icon_pngs.py`** — Extracts each tile from `iconsheet.png` as a separate PNG file
+
+### Great Success. You now have 32×32 icons for your project in a format that requires no heap allocation.
