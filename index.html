@@ -498,7 +498,9 @@
         font-size: 0.8em;
         line-height: 1.6;
         color: var(--fg);
-        width: 240px;
+        min-width: 200px;
+        max-width: 280px;
+        width: max-content;
         box-shadow: 0 8px 24px rgba(0,0,0,.3);
         z-index: 1000;
         text-transform: none;
@@ -1730,7 +1732,8 @@ document.querySelectorAll('.help-trigger').forEach(trigger => {
   trigger.addEventListener('mouseenter', () => {
     const rect = trigger.getBoundingClientRect();
     const margin = 8;
-    const tooltipWidth = 240;
+    trigger.classList.add('active');
+    const tooltipWidth = tooltip.offsetWidth || 280;
     const tooltipHeight = tooltip.offsetHeight || 140;
     const left = Math.min(
       Math.max(margin, rect.right - tooltipWidth),
@@ -1743,7 +1746,6 @@ document.querySelectorAll('.help-trigger').forEach(trigger => {
     tooltip.style.left = left + 'px';
     tooltip.style.top = top + 'px';
     tooltip.style.right = 'auto';
-    trigger.classList.add('active');
   });
   trigger.addEventListener('mouseleave', () => {
     trigger.classList.remove('active');
