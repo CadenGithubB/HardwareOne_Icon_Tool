@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HardwareOne Icon Generator</title>
+<title>hardwareone-icon-tool</title>
 
 <script>
     (function() {
@@ -660,7 +660,7 @@
 <header>
     <div class="header-top">
         <div class="header-copy">
-            <h1>HardwareOne Icon Generator</h1>
+            <h1>hardwareone-icon-tool</h1>
             <p>Create 32&times;32 monochrome icons for your ESP32 device</p>
         </div>
     </div>
@@ -1604,7 +1604,7 @@ async function exportCpp() {
   lines.push('#include "icons_embedded.h"');
   lines.push('');
   lines.push('// Auto-generated icon arrays');
-  lines.push('// DO NOT EDIT - regenerate with HardwareOne Icon Generator');
+  lines.push('// DO NOT EDIT - regenerate with hardwareone-icon-tool');
   lines.push('');
 
   for (const icon of iconData) {
@@ -1790,7 +1790,7 @@ function decodeBitmapHex(hexStr) {
 }
 
 function loadStandardIcons() {
-  if (icons.length > 0 && !confirm('This will replace all current icons with the 87 standard HardwareOne icons. Continue?')) return;
+  if (icons.length > 0 && !confirm('This will replace all current icons with the 87 standard hardwareone icons. Continue?')) return;
   icons.length = 0;
   for (const [name, hex] of Object.entries(STANDARD_ICONS_HEX)) {
     icons.push({ name, pixels: decodeBitmapHex(hex) });
