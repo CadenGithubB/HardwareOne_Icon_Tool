@@ -1,4 +1,4 @@
-# hardwareone-icon-tool
+# Hardwareone Icon Tool
 
 Create and manage 32x32 monochrome icons for ESP32 HardwareOne devices.
 
