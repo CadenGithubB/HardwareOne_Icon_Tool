@@ -3,93 +3,753 @@
   "spacing": 1,
   "threshold": 128,
   "sheet": "assets/iconsheet.png",
+  "cols": 15,
+  "rows": 22,
   "icons": [
-    {"name": "smiley", "row": 0, "col": 0},
-    {"name": "frowny", "row": 0, "col": 1},
-    {"name": "folder", "row": 0, "col": 2},
-    {"name": "file", "row": 0, "col": 3},
-    {"name": "wifi_0", "row": 0, "col": 4},
-    {"name": "wifi_1", "row": 0, "col": 5},
-    {"name": "wifi_2", "row": 0, "col": 6},
-    {"name": "wifi_3", "row": 0, "col": 7},
-    {"name": "arrow_left", "row": 0, "col": 8},
-    {"name": "arrow_right", "row": 0, "col": 9},
-    {"name": "arrow_up", "row": 0, "col": 10},
-    {"name": "arrow_down", "row": 0, "col": 11},
-    {"name": "chevron_left", "row": 0, "col": 12},
-    {"name": "chevron_right", "row": 0, "col": 13},
-    {"name": "battery_0", "row": 0, "col": 14},
-    {"name": "battery_25", "row": 1, "col": 0},
-    {"name": "battery_50", "row": 1, "col": 1},
-    {"name": "battery_75", "row": 1, "col": 2},
-    {"name": "battery_100", "row": 1, "col": 3},
-    {"name": "battery_charging", "row": 1, "col": 4},
-    {"name": "plus", "row": 1, "col": 5},
-    {"name": "minus", "row": 1, "col": 6},
-    {"name": "check", "row": 1, "col": 7},
-    {"name": "close", "row": 1, "col": 8},
-    {"name": "menu", "row": 1, "col": 9},
-    {"name": "search", "row": 1, "col": 10},
-    {"name": "info", "row": 1, "col": 11},
-    {"name": "warning", "row": 1, "col": 12},
-    {"name": "settings", "row": 1, "col": 13},
-    {"name": "refresh", "row": 1, "col": 14},
-    {"name": "wifi_off", "row": 2, "col": 0},
-    {"name": "sdcard", "row": 2, "col": 1},
-    {"name": "trash", "row": 2, "col": 2},
-    {"name": "upload", "row": 2, "col": 3},
-    {"name": "download", "row": 2, "col": 4},
-    {"name": "edit", "row": 2, "col": 5},
-    {"name": "save", "row": 2, "col": 6},
-    {"name": "home", "row": 2, "col": 7},
-    {"name": "back", "row": 2, "col": 8},
-    {"name": "lock", "row": 2, "col": 9},
-    {"name": "unlock", "row": 2, "col": 10},
-    {"name": "file_text", "row": 3, "col": 0},
-    {"name": "file_code", "row": 3, "col": 1},
-    {"name": "file_image", "row": 3, "col": 2},
-    {"name": "file_zip", "row": 3, "col": 3},
-    {"name": "file_json", "row": 3, "col": 4},
-    {"name": "file_pdf", "row": 3, "col": 5},
-    {"name": "file_bin", "row": 3, "col": 6},
-    {"name": "sun", "row": 3, "col": 7},
-    {"name": "moon", "row": 3, "col": 8},
-    {"name": "notify_bell", "row": 3, "col": 9},
-    {"name": "notify_espnow", "row": 3, "col": 10},
-    {"name": "notify_automation", "row": 3, "col": 11},
-    {"name": "notify_server", "row": 3, "col": 12},
-    {"name": "notify_sensor", "row": 3, "col": 13},
-    {"name": "notify_logging", "row": 3, "col": 14},
-    {"name": "notify_files", "row": 4, "col": 0},
-    {"name": "notify_system", "row": 4, "col": 1},
-    {"name": "notify_cli", "row": 4, "col": 2},
-    {"name": "device", "row": 4, "col": 3},
-    {"name": "compass", "row": 4, "col": 4},
-    {"name": "imu_axes", "row": 4, "col": 5},
-    {"name": "thermal", "row": 5, "col": 0},
-    {"name": "tof_radar", "row": 5, "col": 1},
-    {"name": "bt_off", "row": 4, "col": 6},
-    {"name": "bt_idle", "row": 4, "col": 7},
-    {"name": "bt_advertising", "row": 4, "col": 8},
-    {"name": "bt_connected", "row": 4, "col": 9},
-    {"name": "speaker", "row": 5, "col": 2},
-    {"name": "smartphone", "row": 5, "col": 3},
-    {"name": "smart_glasses", "row": 5, "col": 4},
-    {"name": "laptop", "row": 5, "col": 5},
-    {"name": "headphones", "row": 5, "col": 6},
-    {"name": "watch", "row": 5, "col": 7},
-    {"name": "gamepad", "row": 5, "col": 8},
-    {"name": "power", "row": 5, "col": 9},
-    {"name": "memory", "row": 5, "col": 10},
-    {"name": "terminal", "row": 5, "col": 11},
-    {"name": "user", "row": 5, "col": 12},
-    {"name": "led", "row": 5, "col": 13},
-    {"name": "radio", "row": 5, "col": 14},
-    {"name": "gesture", "row": 6, "col": 0},
-    {"name": "clock", "row": 6, "col": 1},
-    {"name": "bond", "row": 6, "col": 2},
-    {"name": "bond_off", "row": 6, "col": 3},
-    {"name": "bond_sync", "row": 6, "col": 4},
-    {"name": "bond_search", "row": 6, "col": 5}
+    {
+      "name": "smiley",
+      "row": 0,
+      "col": 0
+    },
+    {
+      "name": "frowny",
+      "row": 0,
+      "col": 1
+    },
+    {
+      "name": "logo",
+      "row": 0,
+      "col": 2
+    },
+    {
+      "name": "arrow_up",
+      "row": 1,
+      "col": 0
+    },
+    {
+      "name": "arrow_down",
+      "row": 1,
+      "col": 1
+    },
+    {
+      "name": "arrow_left",
+      "row": 1,
+      "col": 2
+    },
+    {
+      "name": "arrow_right",
+      "row": 1,
+      "col": 3
+    },
+    {
+      "name": "chevron_left",
+      "row": 1,
+      "col": 4
+    },
+    {
+      "name": "chevron_right",
+      "row": 1,
+      "col": 5
+    },
+    {
+      "name": "back",
+      "row": 1,
+      "col": 6
+    },
+    {
+      "name": "home",
+      "row": 1,
+      "col": 7
+    },
+    {
+      "name": "menu",
+      "row": 1,
+      "col": 8
+    },
+    {
+      "name": "plus",
+      "row": 2,
+      "col": 0
+    },
+    {
+      "name": "minus",
+      "row": 2,
+      "col": 1
+    },
+    {
+      "name": "check",
+      "row": 2,
+      "col": 2
+    },
+    {
+      "name": "close",
+      "row": 2,
+      "col": 3
+    },
+    {
+      "name": "edit",
+      "row": 2,
+      "col": 4
+    },
+    {
+      "name": "save",
+      "row": 2,
+      "col": 5
+    },
+    {
+      "name": "trash",
+      "row": 2,
+      "col": 6
+    },
+    {
+      "name": "search",
+      "row": 2,
+      "col": 7
+    },
+    {
+      "name": "refresh",
+      "row": 2,
+      "col": 8
+    },
+    {
+      "name": "upload",
+      "row": 2,
+      "col": 9
+    },
+    {
+      "name": "download",
+      "row": 2,
+      "col": 10
+    },
+    {
+      "name": "settings",
+      "row": 2,
+      "col": 11
+    },
+    {
+      "name": "text",
+      "row": 2,
+      "col": 12
+    },
+    {
+      "name": "animation",
+      "row": 2,
+      "col": 13
+    },
+    {
+      "name": "info",
+      "row": 3,
+      "col": 0
+    },
+    {
+      "name": "warning",
+      "row": 3,
+      "col": 1
+    },
+    {
+      "name": "help",
+      "row": 3,
+      "col": 2
+    },
+    {
+      "name": "debug",
+      "row": 3,
+      "col": 3
+    },
+    {
+      "name": "clock",
+      "row": 4,
+      "col": 0
+    },
+    {
+      "name": "sun",
+      "row": 4,
+      "col": 1
+    },
+    {
+      "name": "moon",
+      "row": 4,
+      "col": 2
+    },
+    {
+      "name": "file",
+      "row": 5,
+      "col": 0
+    },
+    {
+      "name": "folder",
+      "row": 5,
+      "col": 1
+    },
+    {
+      "name": "file_text",
+      "row": 5,
+      "col": 2
+    },
+    {
+      "name": "file_code",
+      "row": 5,
+      "col": 3
+    },
+    {
+      "name": "file_image",
+      "row": 5,
+      "col": 4
+    },
+    {
+      "name": "file_zip",
+      "row": 5,
+      "col": 5
+    },
+    {
+      "name": "file_json",
+      "row": 5,
+      "col": 6
+    },
+    {
+      "name": "file_pdf",
+      "row": 5,
+      "col": 7
+    },
+    {
+      "name": "file_bin",
+      "row": 5,
+      "col": 8
+    },
+    {
+      "name": "sdcard",
+      "row": 5,
+      "col": 9
+    },
+    {
+      "name": "memory",
+      "row": 5,
+      "col": 10
+    },
+    {
+      "name": "wifi_off",
+      "row": 6,
+      "col": 0
+    },
+    {
+      "name": "wifi_0",
+      "row": 6,
+      "col": 1
+    },
+    {
+      "name": "wifi_1",
+      "row": 6,
+      "col": 2
+    },
+    {
+      "name": "wifi_2",
+      "row": 6,
+      "col": 3
+    },
+    {
+      "name": "wifi_3",
+      "row": 6,
+      "col": 4
+    },
+    {
+      "name": "wifi",
+      "row": 6,
+      "col": 5
+    },
+    {
+      "name": "signal",
+      "row": 6,
+      "col": 6
+    },
+    {
+      "name": "bt_off",
+      "row": 7,
+      "col": 0
+    },
+    {
+      "name": "bt_idle",
+      "row": 7,
+      "col": 1
+    },
+    {
+      "name": "bt_advertising",
+      "row": 7,
+      "col": 2
+    },
+    {
+      "name": "bt_connected",
+      "row": 7,
+      "col": 3
+    },
+    {
+      "name": "pair_link",
+      "row": 8,
+      "col": 0
+    },
+    {
+      "name": "pair_link_off",
+      "row": 8,
+      "col": 1
+    },
+    {
+      "name": "pair_sync",
+      "row": 8,
+      "col": 2
+    },
+    {
+      "name": "pair_search",
+      "row": 8,
+      "col": 3
+    },
+    {
+      "name": "pair_beacon",
+      "row": 8,
+      "col": 4
+    },
+    {
+      "name": "battery_0",
+      "row": 9,
+      "col": 0
+    },
+    {
+      "name": "battery_25",
+      "row": 9,
+      "col": 1
+    },
+    {
+      "name": "battery_50",
+      "row": 9,
+      "col": 2
+    },
+    {
+      "name": "battery_75",
+      "row": 9,
+      "col": 3
+    },
+    {
+      "name": "battery_100",
+      "row": 9,
+      "col": 4
+    },
+    {
+      "name": "battery_full",
+      "row": 9,
+      "col": 5
+    },
+    {
+      "name": "battery_charging",
+      "row": 9,
+      "col": 6
+    },
+    {
+      "name": "power",
+      "row": 9,
+      "col": 7
+    },
+    {
+      "name": "notify_bell",
+      "row": 10,
+      "col": 0
+    },
+    {
+      "name": "notify_espnow",
+      "row": 10,
+      "col": 1
+    },
+    {
+      "name": "notify_server",
+      "row": 10,
+      "col": 2
+    },
+    {
+      "name": "notify_automation",
+      "row": 10,
+      "col": 3
+    },
+    {
+      "name": "notify_sensor",
+      "row": 10,
+      "col": 4
+    },
+    {
+      "name": "notify_logging",
+      "row": 10,
+      "col": 5
+    },
+    {
+      "name": "notify_files",
+      "row": 10,
+      "col": 6
+    },
+    {
+      "name": "notify_system",
+      "row": 10,
+      "col": 7
+    },
+    {
+      "name": "notify_cli",
+      "row": 10,
+      "col": 8
+    },
+    {
+      "name": "notify_display",
+      "row": 10,
+      "col": 9
+    },
+    {
+      "name": "notify_auth",
+      "row": 10,
+      "col": 10
+    },
+    {
+      "name": "notify_power",
+      "row": 10,
+      "col": 11
+    },
+    {
+      "name": "notify_voice",
+      "row": 10,
+      "col": 12
+    },
+    {
+      "name": "notify_camera",
+      "row": 10,
+      "col": 13
+    },
+    {
+      "name": "notify_bluetooth",
+      "row": 10,
+      "col": 14
+    },
+    {
+      "name": "mqtt",
+      "row": 11,
+      "col": 0
+    },
+    {
+      "name": "web",
+      "row": 11,
+      "col": 1
+    },
+    {
+      "name": "radio",
+      "row": 11,
+      "col": 2
+    },
+    {
+      "name": "compass",
+      "row": 12,
+      "col": 0
+    },
+    {
+      "name": "imu_axes",
+      "row": 12,
+      "col": 1
+    },
+    {
+      "name": "thermal",
+      "row": 12,
+      "col": 2
+    },
+    {
+      "name": "tof_radar",
+      "row": 12,
+      "col": 3
+    },
+    {
+      "name": "presence",
+      "row": 12,
+      "col": 4
+    },
+    {
+      "name": "rtc",
+      "row": 12,
+      "col": 5
+    },
+    {
+      "name": "gesture",
+      "row": 12,
+      "col": 6
+    },
+    {
+      "name": "gps",
+      "row": 12,
+      "col": 7
+    },
+    {
+      "name": "sensor",
+      "row": 12,
+      "col": 8
+    },
+    {
+      "name": "device",
+      "row": 13,
+      "col": 0
+    },
+    {
+      "name": "smartphone",
+      "row": 13,
+      "col": 1
+    },
+    {
+      "name": "laptop",
+      "row": 13,
+      "col": 2
+    },
+    {
+      "name": "watch",
+      "row": 13,
+      "col": 3
+    },
+    {
+      "name": "smart_glasses",
+      "row": 13,
+      "col": 4
+    },
+    {
+      "name": "headphones",
+      "row": 13,
+      "col": 5
+    },
+    {
+      "name": "gamepad",
+      "row": 13,
+      "col": 6
+    },
+    {
+      "name": "camera",
+      "row": 13,
+      "col": 7
+    },
+    {
+      "name": "led",
+      "row": 13,
+      "col": 8
+    },
+    {
+      "name": "neopixel",
+      "row": 13,
+      "col": 9
+    },
+    {
+      "name": "servo",
+      "row": 13,
+      "col": 10
+    },
+    {
+      "name": "terminal",
+      "row": 13,
+      "col": 11
+    },
+    {
+      "name": "ring",
+      "row": 13,
+      "col": 12
+    },
+    {
+      "name": "rotary_encoder",
+      "row": 13,
+      "col": 13
+    },
+    {
+      "name": "video",
+      "row": 13,
+      "col": 14
+    },
+    {
+      "name": "speaker",
+      "row": 14,
+      "col": 0
+    },
+    {
+      "name": "vol_mute",
+      "row": 14,
+      "col": 1
+    },
+    {
+      "name": "vol_min",
+      "row": 14,
+      "col": 2
+    },
+    {
+      "name": "vol_max",
+      "row": 14,
+      "col": 3
+    },
+    {
+      "name": "mic",
+      "row": 14,
+      "col": 4
+    },
+    {
+      "name": "microphone",
+      "row": 14,
+      "col": 5
+    },
+    {
+      "name": "espsr",
+      "row": 14,
+      "col": 6
+    },
+    {
+      "name": "edgeimpulse",
+      "row": 15,
+      "col": 0
+    },
+    {
+      "name": "llm",
+      "row": 15,
+      "col": 1
+    },
+    {
+      "name": "model",
+      "row": 15,
+      "col": 2
+    },
+    {
+      "name": "guardrail",
+      "row": 15,
+      "col": 3
+    },
+    {
+      "name": "user",
+      "row": 16,
+      "col": 0
+    },
+    {
+      "name": "lock",
+      "row": 16,
+      "col": 1
+    },
+    {
+      "name": "unlock",
+      "row": 16,
+      "col": 2
+    },
+    {
+      "name": "password",
+      "row": 16,
+      "col": 3
+    },
+    {
+      "name": "key",
+      "row": 16,
+      "col": 4
+    },
+    {
+      "name": "shield",
+      "row": 16,
+      "col": 5
+    },
+    {
+      "name": "fingerprint",
+      "row": 16,
+      "col": 6
+    },
+    {
+      "name": "bond",
+      "row": 17,
+      "col": 0
+    },
+    {
+      "name": "bond_master",
+      "row": 17,
+      "col": 1
+    },
+    {
+      "name": "bond_worker",
+      "row": 17,
+      "col": 2
+    },
+    {
+      "name": "mesh_nodes",
+      "row": 17,
+      "col": 3
+    },
+    {
+      "name": "mesh_master",
+      "row": 17,
+      "col": 4
+    },
+    {
+      "name": "map",
+      "row": 18,
+      "col": 0
+    },
+    {
+      "name": "map_pin",
+      "row": 18,
+      "col": 1
+    },
+    {
+      "name": "route",
+      "row": 18,
+      "col": 2
+    },
+    {
+      "name": "layers",
+      "row": 18,
+      "col": 3
+    },
+    {
+      "name": "zoom_in",
+      "row": 18,
+      "col": 4
+    },
+    {
+      "name": "zoom_out",
+      "row": 18,
+      "col": 5
+    },
+    {
+      "name": "recenter",
+      "row": 18,
+      "col": 6
+    },
+    {
+      "name": "bolt",
+      "row": 19,
+      "col": 0
+    },
+    {
+      "name": "branch",
+      "row": 19,
+      "col": 1
+    },
+    {
+      "name": "calendar",
+      "row": 19,
+      "col": 2
+    },
+    {
+      "name": "hourglass",
+      "row": 19,
+      "col": 3
+    },
+    {
+      "name": "stopwatch",
+      "row": 19,
+      "col": 4
+    },
+    {
+      "name": "notify_network",
+      "row": 20,
+      "col": 0
+    },
+    {
+      "name": "notify_mqtt",
+      "row": 20,
+      "col": 1
+    },
+    {
+      "name": "notify_storage",
+      "row": 20,
+      "col": 2
+    },
+    {
+      "name": "notify_time",
+      "row": 20,
+      "col": 3
+    }
   ]
 }

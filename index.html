@@ -718,6 +718,11 @@
             <span class="preview-label">2&times;</span>
             <canvas id="previewCanvas2x" width="64" height="64"></canvas>
             <span class="preview-label" id="iconNameLabel" style="color:var(--accent-strong); font-size:0.9em; font-weight:600;"></span>
+            <span class="preview-label" style="margin-left:14px;">cell</span>
+            <input id="posRow" type="number" min="0" title="row" onchange="setIconPos()"
+                   style="width:46px; text-align:center;">
+            <input id="posCol" type="number" min="0" title="col" onchange="setIconPos()"
+                   style="width:46px; text-align:center;">
         </div>
     </div>
 
@@ -850,7 +855,9 @@ const ICONS_PER_ROW = 15;
 // ============================================================
 // State
 // ============================================================
-let icons = [];
+let icons = [];        // each: { name, pixels, row, col }
+let gridCols = ICONS_PER_ROW;  // sheet width  (persisted, may grow)
+let gridRows = 7;              // sheet height (persisted, may grow)
 let currentIdx = -1;
 let currentTool = 'pen';
 let isDrawing = false;
@@ -874,6 +881,35 @@ const previewCtx = previewCanvas.getContext('2d');
 
 const preview2x = document.getElementById('previewCanvas2x');
 const preview2xCtx = preview2x.getContext('2d');
+
+// ============================================================
+// Grid / position helpers
+// ============================================================
+function cellKey(r, c) { return r + ',' + c; }
+
+// Cells occupied by icons, optionally excluding one index (for move checks).
+function usedCells(exceptIdx) {
+  const s = new Set();
+  icons.forEach((ic, j) => { if (j !== exceptIdx) s.add(cellKey(ic.row, ic.col)); });
+  return s;
+}
+
+// First empty cell in row-major order (fills gaps before appending a new row).
+function firstFreeCell() {
+  const used = usedCells(-1);
+  for (let r = 0; r <= Math.max(gridRows, 1); r++)
+    for (let c = 0; c < gridCols; c++)
+      if (!used.has(cellKey(r, c))) return [r, c];
+  return [gridRows, 0];
+}
+
+// Grow the persisted grid extent to cover every icon (never shrinks it).
+function recomputeGrid() {
+  let mr = gridRows - 1, mc = gridCols - 1;
+  icons.forEach(ic => { if (ic.row > mr) mr = ic.row; if (ic.col > mc) mc = ic.col; });
+  gridRows = Math.max(gridRows, mr + 1);
+  gridCols = Math.max(gridCols, mc + 1);
+}
 
 // ============================================================
 // Rendering
@@ -976,6 +1012,12 @@ function renderIconList() {
     name.className = 'icon-name';
     name.textContent = icon.name;
 
+    const pos = document.createElement('span');
+    pos.className = 'icon-pos';
+    pos.textContent = icon.row + ',' + icon.col;
+    pos.title = 'grid cell (row,col)';
+    pos.style.cssText = 'opacity:.45; font-size:.72em; font-variant-numeric:tabular-nums; padding:0 6px;';
+
     const ren = document.createElement('span');
     ren.className = 'icon-rename';
     ren.textContent = 'rename';
@@ -988,6 +1030,7 @@ function renderIconList() {
 
     item.appendChild(thumb);
     item.appendChild(name);
+    item.appendChild(pos);
     item.appendChild(ren);
     item.appendChild(del);
     list.appendChild(item);
@@ -999,6 +1042,7 @@ function renderIconList() {
   document.getElementById('previewRow').style.display = hasIcon ? 'flex' : 'none';
   if (hasIcon) {
     document.getElementById('iconNameLabel').textContent = icons[currentIdx].name;
+    syncPosInputs();
   }
 }
 
@@ -1011,6 +1055,32 @@ function selectIcon(i) {
   redoStack = [];
   renderCanvas();
   renderIconList();
+}
+
+// Move the selected icon to a chosen grid cell (for placing into reserved slots).
+function setIconPos() {
+  if (currentIdx < 0) return;
+  const r = parseInt(document.getElementById('posRow').value, 10);
+  const c = parseInt(document.getElementById('posCol').value, 10);
+  if (isNaN(r) || isNaN(c) || r < 0 || c < 0) { syncPosInputs(); return; }
+  if (usedCells(currentIdx).has(cellKey(r, c))) {
+    alert('Cell ' + r + ',' + c + ' is already occupied.');
+    syncPosInputs();
+    return;
+  }
+  icons[currentIdx].row = r;
+  icons[currentIdx].col = c;
+  recomputeGrid();
+  renderIconList();
+  showToast('Moved to cell ' + r + ',' + c);
+}
+
+function syncPosInputs() {
+  const has = currentIdx >= 0 && currentIdx < icons.length;
+  const rIn = document.getElementById('posRow'), cIn = document.getElementById('posCol');
+  if (!rIn || !cIn) return;
+  rIn.value = has ? icons[currentIdx].row : '';
+  cIn.value = has ? icons[currentIdx].col : '';
 }
 
 function showAddIconModal() {
@@ -1033,10 +1103,12 @@ function addIcon() {
     alert('An icon with that name already exists.');
     return;
   }
-  icons.push({ name, pixels: new Uint8Array(TILE * TILE) });
+  const [r, c] = firstFreeCell();
+  icons.push({ name, pixels: new Uint8Array(TILE * TILE), row: r, col: c });
+  recomputeGrid();
   hideAddIconModal();
   selectIcon(icons.length - 1);
-  showToast('Created icon: ' + name);
+  showToast('Created icon: ' + name + ' (cell ' + r + ',' + c + ')');
 }
 
 function deleteIcon(i) {
@@ -1356,8 +1428,8 @@ function doImport() {
       URL.revokeObjectURL(url);
 
       const extractPixels = (col, row) => {
-        const sx = col * step + 1;
-        const sy = row * step + 1;
+        const sx = col * step;   // tiles are flush at offset 0 (spacing sits AFTER each tile)
+        const sy = row * step;
         const imgData = tmpCtx.getImageData(sx, sy, tileSize, tileSize);
         const pixels = new Uint8Array(TILE * TILE);
         for (let y = 0; y < TILE; y++) {
@@ -1377,27 +1449,30 @@ function doImport() {
       icons = [];
 
       if (iconDefs) {
-        // JSON provided — use named icon definitions
+        // JSON provided — keep each icon's grid position
+        gridCols = manifest.cols || ICONS_PER_ROW;
+        gridRows = manifest.rows || 0;
         for (const def of iconDefs) {
-          const pixels = extractPixels(def.col || 0, def.row || 0);
-          icons.push({ name: def.name, pixels });
+          const r = def.row || 0, c = def.col || 0;
+          icons.push({ name: def.name, pixels: extractPixels(c, r), row: r, col: c });
         }
+        icons.sort((a, b) => a.row - b.row || a.col - b.col);
       } else {
-        // PNG only — scan all tiles, import non-empty ones
-        const cols = Math.floor((img.width - 1) / step);
-        const rows = Math.floor((img.height - 1) / step);
+        // PNG only — scan all tiles, import non-empty ones at their cell
+        gridCols = Math.floor((img.width - 1) / step);
+        gridRows = Math.floor((img.height - 1) / step);
         let count = 0;
-        for (let r = 0; r < rows; r++) {
-          for (let c = 0; c < cols; c++) {
+        for (let r = 0; r < gridRows; r++) {
+          for (let c = 0; c < gridCols; c++) {
             const pixels = extractPixels(c, r);
-            const hasContent = pixels.some(p => p === 1);
-            if (hasContent) {
+            if (pixels.some(p => p === 1)) {
               count++;
-              icons.push({ name: 'icon_' + String(count).padStart(3, '0'), pixels });
+              icons.push({ name: 'icon_' + String(count).padStart(3, '0'), pixels, row: r, col: c });
             }
           }
         }
       }
+      recomputeGrid();
 
       currentIdx = icons.length > 0 ? 0 : -1;
       historyStacks = icons.map(() => []);
@@ -1459,9 +1534,9 @@ function importSingleIconPng(input) {
 
     const name = file.name.replace(/\.png$/i, '').replace(/[^a-zA-Z0-9_]/g, '_') || 'imported';
     pushHistory();
-    icons.push({ name, pixels });
-    historyStacks.push([]);
-    redoStacks.push([]);
+    const [pr, pc] = firstFreeCell();
+    icons.push({ name, pixels, row: pr, col: pc });
+    recomputeGrid();
     currentIdx = icons.length - 1;
     renderCanvas();
     renderIconList();
@@ -1495,17 +1570,18 @@ function exportCurrentIconPng() {
 function exportJson() {
   if (icons.length === 0) { alert('No icons to export.'); return; }
 
-  const iconDefs = icons.map((icon, i) => ({
-    name: icon.name,
-    row: Math.floor(i / ICONS_PER_ROW),
-    col: i % ICONS_PER_ROW
-  }));
+  recomputeGrid();
+  const iconDefs = icons
+    .map(icon => ({ name: icon.name, row: icon.row, col: icon.col }))
+    .sort((a, b) => a.row - b.row || a.col - b.col);
 
   const manifest = {
     tileSize: 32,
     spacing: 1,
     threshold: 128,
     sheet: "assets/iconsheet.png",
+    cols: gridCols,
+    rows: gridRows,
     icons: iconDefs
   };
 
@@ -1520,30 +1596,28 @@ function exportIconsheetPng() {
   if (icons.length === 0) { alert('No icons to export.'); return; }
 
   const step = TILE + 1;
+  recomputeGrid();
+  const W = gridCols * step + 1, H = gridRows * step + 1;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 496; canvas.height = 496;
+  canvas.width = W; canvas.height = H;
   const ctx = canvas.getContext('2d');
 
   // Black background
   ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, 496, 496);
+  ctx.fillRect(0, 0, W, H);
 
-  // Draw 1px grid lines at tile boundaries (spacing=1, matches iconsheet.json)
-  // 15 cols/rows × 33px = 495px of icon data; grid lines at every step boundary
+  // 1px spacing lines sit AFTER each tile (col*step+TILE), so tiles stay flush
+  // at offset 0 — matching the crop convention in export_icons_embedded_cpp.py
+  // / generate_icons.py, which read tiles at (col*step, row*step).
   ctx.fillStyle = '#333333';
-  for (let i = 0; i <= 15; i++) {
-    const pos = i * step;
-    ctx.fillRect(pos, 0, 1, 496); // vertical
-    ctx.fillRect(0, pos, 496, 1); // horizontal
-  }
+  for (let i = 0; i < gridCols; i++) ctx.fillRect(i * step + TILE, 0, 1, H); // vertical
+  for (let i = 0; i < gridRows; i++) ctx.fillRect(0, i * step + TILE, W, 1); // horizontal
 
-  // Draw each icon tile
-  icons.forEach((icon, i) => {
-    const col = i % ICONS_PER_ROW;
-    const row = Math.floor(i / ICONS_PER_ROW);
-    const ox = col * step + 1;
-    const oy = row * step + 1;
+  // Draw each icon tile flush at its stored grid cell (gaps stay empty)
+  icons.forEach((icon) => {
+    const ox = icon.col * step;
+    const oy = icon.row * step;
 
     ctx.fillStyle = '#ffffff';
     for (let y = 0; y < TILE; y++) {
@@ -1792,9 +1866,14 @@ function decodeBitmapHex(hexStr) {
 function loadStandardIcons() {
   if (icons.length > 0 && !confirm('This will replace all current icons with the 87 standard hardwareone icons. Continue?')) return;
   icons.length = 0;
+  gridCols = ICONS_PER_ROW;
+  let si = 0;
   for (const [name, hex] of Object.entries(STANDARD_ICONS_HEX)) {
-    icons.push({ name, pixels: decodeBitmapHex(hex) });
+    icons.push({ name, pixels: decodeBitmapHex(hex),
+                 row: Math.floor(si / gridCols), col: si % gridCols });
+    si++;
   }
+  gridRows = Math.ceil(icons.length / gridCols);
   currentIdx = 0;
   historyStacks = icons.map(() => []);
   redoStacks = icons.map(() => []);
