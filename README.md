@@ -8,6 +8,8 @@ Create and manage 32x32 monochrome icons for ESP32 HardwareOne devices.
 
 Draw, edit, and export icons entirely in your browser — no dependencies required.
 
+Click **Defaults** to load the redesigned set of 87 icons. The checked-in iconsheet and C++ exports contain the same artwork, including centered warning and refresh symbols, smooth arrow tips, the JSON semicolon, and the two-dot image icon.
+
 ### Features
 - **Pixel Drawing** — 32x32 grid canvas with pen, eraser, fill, and line tools
 - **Icon Management** — Add, rename, delete, and browse icons in a visual list
@@ -28,7 +30,7 @@ These scripts still work if you prefer a local workflow.
 ```
 python3 scripts/draw_iconsheet_png.py
 ```
-Programmatically draws all 87 standard icons to `assets/iconsheet.png`.
+Rebuilds `assets/iconsheet.png` from the browser’s current standard icon bitmaps, using `iconsheet.json` for the layout (requires Pillow).
 
 **Option B — Start from a blank template:**
 ```
