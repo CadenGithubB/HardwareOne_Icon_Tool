@@ -119,7 +119,7 @@ def _generate_cpp(icons: List[Dict[str, Any]]) -> str:
 
 
 def main() -> int:
-    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     icons_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
     manifest_path = os.path.join(icons_root, "iconsheet.json")

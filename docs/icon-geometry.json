@@ -1,0 +1,39 @@
+{
+  "symmetry": {
+    "camera": "x",
+    "debug": "x",
+    "edgeimpulse": "xy",
+    "mic": "x",
+    "microphone": "x",
+    "neopixel": "xy",
+    "notify_display": "x",
+    "presence": "x",
+    "servo": "x",
+    "web": "xy",
+    "memory": "x",
+    "apps": "xy",
+    "signal": "x",
+    "gps": "xy",
+    "keyboard": "x",
+    "users": "x",
+    "password": "xy",
+    "ring": "x",
+    "fan": "rot90",
+    "led_matrix": "xy",
+    "mesh_nodes": "x",
+    "shield": "x",
+    "error": "xy",
+    "logo": "x",
+    "text": "x",
+    "pair_beacon": "x",
+    "map_pin": "x",
+    "layers": "x",
+    "recenter": "xy"
+  },
+  "fileFrame": {
+    "x": 4,
+    "y": 2,
+    "width": 24,
+    "height": 28
+  }
+}
